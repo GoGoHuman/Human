@@ -1,0 +1,2 @@
+[20-Feb-2016 22:01:30 UTC] PHP Parse error:  syntax error, unexpected '$HUMAN_ADMIN_BRAIN' (T_VARIABLE) in /home/human/public_html/wp-content/themes/human/inc/camp/h-heart/admin.class.php on line 18
+[20-Feb-2016 22:01:47 UTC] PHP Parse error:  syntax error, unexpected '$HUMAN_ADMIN_BRAIN' (T_VARIABLE) in /home/human/public_html/wp-content/themes/human/inc/camp/h-heart/admin.class.php on line 18
