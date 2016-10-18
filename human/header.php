@@ -21,8 +21,8 @@ $pageid = get_the_ID ();
                     <link rel="pingback" href="<?php bloginfo ( 'pingback_url' ); ?>">
                     <?php
                     wp_head ();
-                    if ( get_option ( 'HUMAN_ANALYTICS' ) ) {
-                                $tracking = get_option ( 'HUMAN_ANALYTICS' );
+                    $human_analytics = get_option ( 'HUMAN_ANALYTICS' );
+                    if ( $human_analytics && ! empty ( $human_analytics ) ) {
                                 ?>
                                 <script>
                                             ( function ( i, s, o, g, r, a, m ) {
@@ -36,7 +36,7 @@ $pageid = get_the_ID ();
                                                       a.src = g;
                                                       m.parentNode.insertBefore ( a, m )
                                             } ) ( window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga' );
-                                            ga ( 'create', '<?php echo $tracking; ?>', 'auto' );
+                                            ga ( 'create', '<?php echo $human_analytics; ?>', 'auto' );
                                             ga ( 'send', 'pageview' );
                                 </script>
                     <?php } ?>
@@ -44,12 +44,7 @@ $pageid = get_the_ID ();
 
           <body <?php body_class ( 'human-id-' . $pageid ); ?>>
 
-                    <div id="loader-wrapper" style="display: block;">
-                              <div class="loader-content">
-                                        <div class="cube1 t-cube"></div>
-                                        <div class="cube2 t-cube"></div>
-                              </div>
-                    </div>
+
                     <div id="page" class="hfeed site human-page" style="">
 
 

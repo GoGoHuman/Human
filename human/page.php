@@ -13,11 +13,12 @@
  * @package human
  */
 get_header ();
+
 $template = 'Page';
+
 
 if ( get_post_meta ( get_the_ID (), 'human_template' ) && ! empty ( get_post_meta ( get_the_ID (), 'human_template' )[ 0 ] ) ) {
             $template = get_post_meta ( get_the_ID (), 'human_template' )[ 0 ];
-            //print_r ( $template . '<hr>' );
 }
 ?>
 

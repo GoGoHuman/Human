@@ -70,19 +70,17 @@ function human_setup_options ( $import = 0 ) {
             if ( isset ( $import ) && strpos ( $import, 'human' ) > 0 ) {
 
                         $path = $import . '/';
-                        $human_forms_path = $path . 'human_forms';
-                        $human_loops_path = $path . 'human_loops';
-                        $human_widgets_path = $path . 'human_widgets';
-                        $human_templates_path = $path . 'human_templates';
             }
             else {
 
                         $path = HUMAN_FRIENDS_PATH . '/templates/f-face/';
-                        $human_forms_path = $path . 'human-forms';
-                        $human_loops_path = $path . 'human-loops';
-                        $human_widgets_path = $path . 'human-widgets';
-                        $human_templates_path = $path . 'human-templates';
             }
+
+            $human_forms_path = $path . 'human-forms';
+            $human_loops_path = $path . 'human-loops';
+            $human_widgets_path = $path . 'human-widgets';
+            $human_templates_path = $path . 'human-templates';
+            $page_path = $path . 'page';
             foreach ( $cpts as $k => $c ) {
 
                         $roles[ 'administrator' ][ 'capabilities' ][ 'vc_access_rules_post_types/' . $c ] = 1;
@@ -93,6 +91,7 @@ function human_setup_options ( $import = 0 ) {
             $human_templates[ 'human_loops' ] = '';
             $human_templates[ 'human_templates' ] = '';
             $human_templates[ 'human_forms' ] = '';
+            $human_templates[ 'page' ] = '';
             foreach ( new DirectoryIterator ( $human_forms_path ) as $file ) {
                         if ( $file->isDot () )
                                     continue;
@@ -112,6 +111,24 @@ function human_setup_options ( $import = 0 ) {
                         if ( $file->isDot () )
                                     continue;
                         $human_templates[ 'human_widgets' ][] = $file->getFilename ();
+            }
+            foreach ( new DirectoryIterator ( $page_path ) as $file ) {
+                        if ( $file->isDot () )
+                                    continue;
+                        $human_templates[ 'page' ][] = $file->getFilename ();
+            }
+
+            function wp_exist_post_by_title ( $title, $post_type ) {
+                        global $wpdb, $table_prefix;
+                        $sql = "SELECT ID FROM " . $table_prefix . "posts WHERE post_title = '" . $title . "' && post_type = '" . $post_type . "'";
+                        $return = $wpdb->get_var ( $sql );
+
+                        if ( ! empty ( $return ) ) {
+                                    return $return;
+                        }
+                        else {
+                                    return false;
+                        }
             }
 
             function insert_human_templates ( $template_type, $human_templates, $import = null ) {
@@ -142,12 +159,11 @@ function human_setup_options ( $import = 0 ) {
                                     );
                                     // usage
                                     $post_exists = wp_exist_post_by_title ( $template, $human_type );
-                                    if ( $post_exists ) {
-                                                // wp_delete_post ( $post_exists, true );
-                                                //  wp_insert_post ( $post );
+                                    if ( ! $post_exists ) {
+                                                wp_insert_post ( $post );
                                     }
                                     else {
-                                                wp_insert_post ( $post );
+
                                     }
                         }
             }
@@ -242,10 +258,6 @@ function human_register_templates () {
             );
 }
 
-if ( function_exists ( 'add_submenu_page' ) === true ) {
-            add_action ( 'init', 'human_admin_menus', 0 );
-}
-
 function human_remove_metabox () {
             remove_meta_box ( 'wpseo_meta', 'human_widgets', 'normal' );
             remove_meta_box ( 'wpseo_meta', 'human_templates', 'normal' );
@@ -310,6 +322,10 @@ function human_admin_menus () {
 
             add_submenu_page ( HUMAN_NAME . "-settings", "Human Forms", "Human Forms", 'manage_options', 'edit.php?post_type=human_forms', 0 );
             add_submenu_page ( HUMAN_NAME . "-settings", "Human Loops", "Human Loops", 'manage_options', 'edit.php?post_type=human_loops', 0 );
+}
+
+if ( function_exists ( 'add_submenu_page' ) === true ) {
+            add_action ( 'init', 'human_admin_menus', 0 );
 }
 
 function human_template ( $attr, $content = null ) {

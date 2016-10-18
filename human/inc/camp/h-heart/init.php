@@ -31,18 +31,6 @@
 wp_register_theme_deactivation_hook ( 'human', 'human_deactivate' );
 wp_register_theme_activation_hook ( 'human', 'human_activate' );
 
-function wp_exist_post_by_title ( $title, $post_type ) {
-            global $wpdb, $table_prefix;
-
-            $return = $wpdb->get_var ( "SELECT ID FROM '.$table_prefix.'posts WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = '" . $post_type . "'" );
-            if ( empty ( $return ) ) {
-                        return false;
-            }
-            else {
-                        return $return;
-            }
-}
-
 function human_activate () {
 
 }

@@ -13,8 +13,6 @@ function human_cookie_boxes ( $attr = null ) {
             }
 
             $cookie = str_replace ( ' ', '_', $attr[ 'human_cookie_box' ] );
-            //echo $cookie.'<hr>'.$_COOKIE[$cookie];
-            // var_dump($_COOKIE);
 
 
             $auto = '';

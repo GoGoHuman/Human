@@ -14,7 +14,7 @@ if ( get_post_meta ( get_the_ID (), 'human_template' ) && ! empty ( get_post_met
             $template = get_post_meta ( get_the_ID (), 'human_template' );
 }
 
-//print_r ( $template );
+print_r ( $template );
 ?>
 
 
