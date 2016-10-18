@@ -46,13 +46,20 @@ function human_bar_links () {
             }
 }
 
-add_action ( 'wp_before_admin_bar_render', 'human_bar_links' );
+function wp_exist_post_by_title ( $title, $post_type ) {
+            global $wpdb, $table_prefix;
+            $sql = "SELECT ID FROM " . $table_prefix . "posts WHERE post_title = '" . $title . "' && post_type = '" . $post_type . "'";
+            $return = $wpdb->get_var ( $sql );
 
-add_action ( 'after_switch_theme', 'human_setup_options' );
-
-function human_switch_theme_options () {
-            human_setup_options ( $import = 0 );
+            if ( ! empty ( $return ) ) {
+                        return $return;
+            }
+            else {
+                        return false;
+            }
 }
+
+add_action ( 'wp_before_admin_bar_render', 'human_bar_links' );
 
 function human_setup_options ( $import = 0 ) {
 
@@ -116,19 +123,6 @@ function human_setup_options ( $import = 0 ) {
                         if ( $file->isDot () )
                                     continue;
                         $human_templates[ 'page' ][] = $file->getFilename ();
-            }
-
-            function wp_exist_post_by_title ( $title, $post_type ) {
-                        global $wpdb, $table_prefix;
-                        $sql = "SELECT ID FROM " . $table_prefix . "posts WHERE post_title = '" . $title . "' && post_type = '" . $post_type . "'";
-                        $return = $wpdb->get_var ( $sql );
-
-                        if ( ! empty ( $return ) ) {
-                                    return $return;
-                        }
-                        else {
-                                    return false;
-                        }
             }
 
             function insert_human_templates ( $template_type, $human_templates, $import = null ) {
