@@ -295,7 +295,7 @@ function human_reset_css ( $template = null ) {
                         $override_templates = true;
             }
             else {
-                        $default_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/human.css' );
+                        $default_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen-min.css' );
                         $default_fonts_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/human-fonts.css' );
                         $default_gens = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen.html' );
                         $default_gen_mins = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen-min.html' );
