@@ -1,9 +1,0 @@
-[02-Mar-2016 09:10:24 UTC] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/Hybrid/Endpoint.php:211
-Stack trace:
-#0 /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
-#1 /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
-#2 /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
-#3 /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/index.php(15): Hybrid_Endpoint::process()
-#4 {main}
-
-Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hybrid_Auth: You cannot access this page directly.' in /home/human/public_html/wp-conten in /home/human/public_html/wp-content/themes/human/inc/camp/friends/social-auth/f-heart/hybridauth/Hybrid/Endpoint.php on line 217

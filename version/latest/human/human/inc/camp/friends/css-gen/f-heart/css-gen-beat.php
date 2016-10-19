@@ -295,7 +295,7 @@ function human_reset_css ( $template = null ) {
                         $override_templates = true;
             }
             else {
-                        $default_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen-min.css' );
+                        $default_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen-min.html' );
                         $default_fonts_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/human-fonts.css' );
                         $default_gens = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen.html' );
                         $default_gen_mins = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/css-gen-min.html' );
@@ -303,11 +303,13 @@ function human_reset_css ( $template = null ) {
                         $default_custom_css = file_get_contents ( HUMAN_BASE_PATH . 'friends/css-gen/f-face/templates/custom-css.html' );
             }
             $myfile = fopen ( explode ( '/wp-content', HUMAN_BASE_PATH )[ 0 ] . "/wp-content/human.css", "w" );
-//$txt = "John Doe\n";
-            global $fonts_face;
-            fwrite ( $myfile, $default_css );
 
+            fwrite ( $myfile, $default_css );
             fclose ( $myfile );
+
+            global $fonts_face;
+
+
             $myfile = fopen ( explode ( '/wp-content', HUMAN_BASE_PATH )[ 0 ] . "/wp-content/human-fonts.css", "w" );
 //$txt = "John Doe\n";
             fwrite ( $myfile, $default_fonts_css );
