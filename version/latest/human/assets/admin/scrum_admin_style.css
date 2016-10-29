@@ -1,0 +1,132 @@
+.scrum_red{
+	outline:1px solid red!important;
+}
+.scrum_del{
+	text-decoration: none
+} 
+.capitalize_first{
+	text-transform: capitalize;
+}
+.srum_table tbody tr {
+    background: aqua;
+}
+.srum_table tbody tr td {
+    padding: 10px 20px;
+} 
+.srum_orange{
+    background: orange;
+}
+.scrum_row{
+    width:100%;
+    display:block;
+}
+.scrum_col{
+    float:left;
+}
+.scrum_row:after{
+    clear:both;
+}
+.srum_table.scrum_center tbody tr td{
+    text-align:center;
+}
+
+
+/*
+ *  Scrum Tooltips
+ *  Top Right & Top Left Available
+ */
+.scrum_tooltip_wrap{
+    position:relative;
+    width:100%;    
+    display:none;
+}
+.scrum_tool_tips{
+    
+    position:absolute;
+    background:#000;    
+    right:0px; 
+    text-align:center;
+    color:#fff;
+}
+.scrum_tool_tips.scrum_right{
+    top:0px;
+    z-index:2;
+}
+.scrum_tool_tips.scrum_bottom {
+    bottom:0px;    
+    z-index:3;
+}
+.scrum_parent:hover .scrum_tooltip_wrap{
+    display:block!important;
+}
+
+.color_picker{
+    display:block;
+}
+
+.color_picker .farbtastic{
+    width: 200px;
+    height: 200px;
+    background: silver;
+    padding: 5px; 
+}
+
+.scrum_color_picker_field{
+    width:16px;
+    height:16px;
+}
+
+.btn {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0px;
+  font-family: Arial;
+  color: #615e61;
+  font-size: 16px;
+  background: #cfd0d1;
+  padding: 10px 16px;
+  text-decoration: none;
+  cursor:pointer;
+}
+
+.btn:hover {
+  background: #dedede;
+  text-decoration: none;
+}
+
+.scrum_50{
+    width:50%;
+}
+
+.scrum_left{
+    float:left;
+}
+
+.scrum_table tr td{
+    padding:10px 20px;
+    outline:1px solid #000;
+}
+
+
+.scrum_sortable tr td{
+    text-align:center;
+}
+.scrum_sortable tbody{
+    margin-top:20px;
+}
+
+#food_menu_wrap input{
+    text-transform: uppercase;
+}
+#new_item_table_row {
+    outline: 3px solid silver;
+    margin-bottom: 35px;
+}
+textarea#new_product_description {
+    margin-top: 5px;
+}
+
+span.fmenu_category_misc_plus.dashicons.dashicons-plus-alt {
+    margin-left: -27px;
+    margin-top: 4px;
+}

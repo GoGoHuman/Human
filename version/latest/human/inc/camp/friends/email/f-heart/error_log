@@ -1,0 +1,1 @@
+[24-Feb-2016 21:24:40 UTC] PHP Fatal error:  Call to undefined function add_action() in /home/human/public_html/wp-content/themes/human/inc/camp/friends/email/f-heart/email-kiss.php on line 392
