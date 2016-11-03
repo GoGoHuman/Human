@@ -87,11 +87,30 @@ function CreateWPFullBackupZip ( $backupName, $zipmode, $use_wpdb = false ) {
             backup_tables ( $db_backup_path );
 
             global $table_prefix;
+
             // print_r ( $db_directory . '/' . $table_prefix . 'users.sql' . '<hr>' );
             unlink ( $db_backup_path . '/' . $table_prefix . 'users.sql' );
             //  print_r ( $db_directory . '/' . $table_prefix . 'usermeta.sql' . '<hr>' );
             unlink ( $db_backup_path . '/' . $table_prefix . 'usermeta.sql' );
 
+            foreach ( new DirectoryIterator ( $db_backup_path ) as $file ) {
+                        if ( $file->isDot () )
+                                    continue;
+                        $db_str = $file->getPathname ();
+
+                        $db_replace = array (
+                                    $table_prefix,
+                                    home_url () );
+                        $db_replace_to = array (
+                                    'human_prefix',
+                                    'human_old_url' );
+                        $old_db_str = str_replace ( $table_prefix, 'human_prefix', $db_str );
+                        $sql_contents = file_get_contents ( $db_str );
+                        $db_file = fopen ( $old_db_str, 'w' );
+                        fwrite ( $db_file, str_replace ( $db_replace, $db_replace_to, $sql_contents ) );
+                        fclose ( $db_file );
+                        unlink ( $db_str );
+            }
             /* error haldler is called from within the wpa_zip function */
             wpa_zip ( $zipFileName, $folderToBeZipped, $zipmode );
             $zipSize = filesize ( $zipFileName );

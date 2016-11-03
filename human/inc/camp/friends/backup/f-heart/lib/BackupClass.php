@@ -262,10 +262,6 @@ class DbBackup {
                                                             }
 
                                                             system ( $mysqlpath . " " . $this->dumpOptions . " -u " . $this->databaseVars[ 'login' ] . $db_pass . " " . $this->databaseVars[ 'database_name' ] . " " . $table_name . " > " . str_replace ( "\\", "/", $this->folderName ) . "/" . $file_name );
-
-
-                                                            // print_r($file_name . ' table created<br>');
-                                                            //         echo "<hr><br>C:/xampp/mysql/bin/mysqldump " . $this->dumpOptions . " --user='" . $this->databaseVars[ 'login' ] . "' --password='" . $this->databaseVars[ 'password' ] . "' " . $this->databaseVars[ 'database_name' ] . " " . $table_name . " > " . str_replace ( "\\", "/", $this->folderName ) . "/" . $file_name . "<hr>";
                                                 }
                                     }
                         }

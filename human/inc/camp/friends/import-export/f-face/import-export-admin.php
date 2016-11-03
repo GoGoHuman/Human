@@ -54,7 +54,8 @@ function humanDeleteDirectory ( $dir ) {
             return rmdir ( $dir );
 }
 
-function copy_directory ( $source1, $dest1, $permissions = 0755 ) {
+function copy_directory ( $source1, $dest1, $permissions = 0755, $rewrite = null ) {
+
             // Check for symlinks
             $dest = str_replace ( array (
                         '\\',
@@ -83,9 +84,11 @@ function copy_directory ( $source1, $dest1, $permissions = 0755 ) {
                         if ( strpos ( $dest, '_translationstatus' ) > 0 ) {
                                     echo '<br>Uncopatible file';
                         }
+                        $contents = file_get_contents ( $source );
+
                         $file = fopen ( $dest, 'w' );
 
-                        fwrite ( $file, file_get_contents ( $source ) );
+                        fwrite ( $file, $contents );
 
                         fclose ( $file );
                         return;
@@ -122,7 +125,7 @@ function copy_directory ( $source1, $dest1, $permissions = 0755 ) {
 function import_baby ( $baby_path ) {
 
             $baby_db_path = str_replace ( '.zip', '', $baby_path ) . '/wp-content/backup-db';
-            echo 'Importing Human Baby theme from : ' . $baby_path;
+            echo 'Installing Human Baby theme from : ' . $baby_path . '<hr>';
             if ( isset ( $_POST[ 'mysql_path' ] ) ) {
                         update_option ( 'human-mysql-path', esc_html ( $_POST[ 'mysql_path' ] ) );
             }
@@ -145,11 +148,23 @@ function import_baby ( $baby_path ) {
             copy_directory ( $wp_content_source, $wp_content_dest );
 
             require HUMAN_FRIENDS_PATH . '/backup/f-heart/restore-db.php';
-
+            global $table_prefix;
             foreach ( new DirectoryIterator ( $baby_db_path ) as $file ) {
                         if ( $file->isDot () )
                                     continue;
                         $db_str = $file->getPathname ();
+
+                        $db_replace_to = array (
+                                    $table_prefix,
+                                    home_url () );
+                        $db_replace = array (
+                                    'human_prefix',
+                                    'human_old_url' );
+
+                        $sql_contents = file_get_contents ( $db_str );
+                        $db_file = fopen ( $db_str, 'w' );
+                        fwrite ( $db_file, str_replace ( $db_replace, $db_replace_to, $sql_contents ) );
+                        fclose ( $db_file );
                         echo restore_db ( $db_str );
             }
             humanDeleteDirectory ( str_replace ( '.zip', '', $baby_path ) );
@@ -228,13 +243,13 @@ function import_baby ( $baby_path ) {
                                           }
                                           elseif ( $baby_push === 2 ) {
                                                       if ( isset ( $_POST[ 'human_push_description' ] ) && ! empty ( $_POST[ 'human_push_description' ] ) ) {
-
+                                                                  global $table_prefix;
                                                                   $baby_path = HUMAN_CHILD_PATH . '/babies/' . $baby_name;
                                                                   mkdir ( HUMAN_CHILD_PATH . '/t' );
                                                                   $temp_baby_path = HUMAN_CHILD_PATH . '/t/' . $baby_name;
                                                                   copy_directory ( $baby_path, $temp_baby_path );
                                                                   $temp_url = HUMAN_CHILD_URL . '/t/' . $baby_name;
-                                                                  $human_partner_api = 'https://human.camp/api/partners.php?desc=' . urlencode ( $_POST[ 'human_push_description' ] . '@@' . home_url () ) . '&temp_url=' . urlencode ( $temp_url );
+                                                                  $human_partner_api = 'https://human.camp/api/partners.php?desc=' . urlencode ( $_POST[ 'human_push_description' ] ) . '&demo_url=' . home_url () . '&temp_url=' . urlencode ( $temp_url ) . '&pre=' . $table_prefix;
 
                                                                   $response = wp_remote_get ( $human_partner_api );
                                                                   if ( is_array ( $response ) ) {
@@ -245,7 +260,7 @@ function import_baby ( $baby_path ) {
                                                                               exit;
                                                                   }
 
-                                                                  humanDeleteDirectory ( HUMAN_CHILD_PATH . '/t' );
+                                                                  //  humanDeleteDirectory ( HUMAN_CHILD_PATH . '/t' );
                                                       }
                                                       else {
                                                                   $import_error = 'You must provide a valid description for the Theme Package';
@@ -338,19 +353,19 @@ function import_baby ( $baby_path ) {
           if ( isset ( $_GET[ 'human_push' ] ) ) {
 
                       function humanBabyImport ( $url, $path, $dest = null ) {
-                                  print_r ( $url );
-                                  print('<hr>' );
-                                  print($path );
-                                  $name = str_replace ( '.zip', '', end ( explode ( '/', $url ) ) );
+                                  $name = explode ( '/', $url );
+                                  $name = end ( $name );
+                                  $name = str_replace ( '.zip', '', $name );
                                   if ( is_file ( $path ) ) {
                                               unlink ( $path );
                                   }
                                   $newfname = $path . '/' . $name . '.zip';
                                   $file = fopen ( $url, 'rb' );
+                                  $demo_url = urldecode ( $_GET[ 'demo_url' ] );
                                   if ( $file ) {
 
                                               $newf = fopen ( $newfname, 'wb' );
-                                              //   print_r($newf);
+
                                               if ( $newf ) {
 
                                                           while ( ! feof ( $file ) ) {
@@ -364,7 +379,7 @@ function import_baby ( $baby_path ) {
                                   if ( $newf ) {
                                               fclose ( $newf );
                                   }
-                                  return '<hr>Theme Package Has been Imported successefully<hr>';
+                                  return '<hr><h2 style="color:green">Theme Package has been Imported successefully</h2><hr>';
                       }
 
                       $url = urldecode ( $_GET[ 'human_push' ] );
@@ -386,14 +401,16 @@ function import_baby ( $baby_path ) {
                                           $desc = $val[ 'desc' ];
 
                                           $ver = explode ( '@@', $desc );
-                                          $url = explode ( '@@', $desc )[ 1 ];
+                                          $urls = explode ( '@@', $desc )[ 1 ];
+                                          $url = explode ( '##', $urls )[ 0 ];
+                                          $pre = explode ( '##', $urls )[ 1 ];
                                           $desc = explode ( '@@', $desc )[ 0 ];
                                           $verify = '<hr>';
                                           // echo explode ( '@@', $desc )[ 2 ];
                                           if ( isset ( $ver[ 2 ] ) ) {
                                                       $verify = '<div class="human-verified"><h3 style="color:green"><span class="dashicons dashicons-yes"></span> &nbsp;Quality Verified By Human</span></h3></div>';
                                           }
-                                          echo '<div class="human-packages" style="float:left;text-align:center;float: left;text-align: center;max-width: 300px;padding: 0 10px;"><h4>' . $val[ 'name' ] . '</h4><img src="' . $url . '/wp-content/themes/human-child/screenshot.png" alt="" style="width:300px">' . $verify . '<p>' . $desc . '</p><a href="?page=human-import-export-settings&human_push=https://human.camp/api/verified/' . $val[ 'name' ] . '/' . $val[ 'name' ] . '.zip" class="button button-primary button-large">Import Package</a>
+                                          echo '<div class="human-packages" style="float:left;text-align:center;float: left;text-align: center;max-width: 300px;padding: 0 10px;"><h4>' . $val[ 'name' ] . '</h4><img src="' . $url . '/wp-content/themes/human-child/screenshot.png" alt="" style="width:300px">' . $verify . '<p>' . $desc . '</p><a href="?page=human-import-export-settings&human_push=https://human.camp/api/verified/' . $val[ 'name' ] . '/' . $val[ 'name' ] . '.zip&demo_url=' . $url . '&pre=' . $pre . '" class="button button-primary button-large">Import Package</a>
                                                    <a href="#" class="to-preview" data-url="' . $url . '">Preview</a>  </div>';
                               }
                   }
