@@ -54,7 +54,7 @@ function humanDeleteDirectory ( $dir ) {
             return rmdir ( $dir );
 }
 
-function copy_directory ( $source1, $dest1, $permissions = 0755, $rewrite = null ) {
+function copy_directory ( $source1, $dest1, $permissions = 0755 ) {
 
             // Check for symlinks
             $dest = str_replace ( array (
@@ -260,7 +260,7 @@ function import_baby ( $baby_path ) {
                                                                               exit;
                                                                   }
 
-                                                                  //  humanDeleteDirectory ( HUMAN_CHILD_PATH . '/t' );
+                                                                  humanDeleteDirectory ( HUMAN_CHILD_PATH . '/t' );
                                                       }
                                                       else {
                                                                   $import_error = 'You must provide a valid description for the Theme Package';
