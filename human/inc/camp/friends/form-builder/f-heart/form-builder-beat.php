@@ -451,8 +451,13 @@ function cssFormAjax () {
                                     }
 
                                     $template .= '</table>';
-                                    $admin_email = get_option ( 'human_form_department_' . esc_html ( $_POST[ 'post_id' ] ) . '' );
-
+                                    if ( ! is_numeric ( $_POST[ 'post_id' ] ) ) {
+                                                return;
+                                    }
+                                    $admin_email = get_option ( 'human_form_department_' . $_POST[ 'post_id' ] . '' );
+                                    if ( $admin_email === 'admin' ) {
+                                                $admin_email = get_option ( 'admin_email', true );
+                                    }
                                     $headers = "MIME-Version: 1.0" . "\r\n";
                                     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
                                     $to = $admin_email;

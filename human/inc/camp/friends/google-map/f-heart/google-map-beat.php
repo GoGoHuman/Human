@@ -76,7 +76,6 @@ function humandefineGoogleMap ( $api_key ) {
             wp_dequeue_script ( 'google-maps-api' );
             wp_enqueue_script ( 'google-maps-api', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $api_key, array (
                         'jquery' ) );
-            //   return '<script id="google-maps-api" src="https://maps.googleapis.com/maps/api/js?key=' . $api_key . '"  async defer></script>';
 }
 
 function humanGoogleMap ( $attr = null ) {
@@ -104,7 +103,13 @@ function humanGoogleMap ( $attr = null ) {
                         $icon = wp_get_attachment_image_src ( $attr[ 'human_map_icon' ] )[ 0 ];
             }
             $html_content = '';
-            //print_r ( $content );
+
+            if ( isset ( $attr[ 'human_map_address' ] ) && ! empty ( $attr[ 'human_map_address' ] ) ) {
+                        $address = $attr[ 'human_map_address' ];
+            }
+            else {
+                        $address = stripcslashes ( get_option ( 'human-option-hastreet' ) . ', ' . get_option ( 'human-option-hapostcode' ) . ', ' . get_option ( 'human-option-hacountry' ) );
+            }
 
             $content_shortcode = '[human_template name="' . $attr[ 'human_map_content' ] . '" type="human_widgets"]';
             if ( isset ( $attr[ 'human_map_content' ] ) ) {
@@ -116,7 +121,7 @@ function humanGoogleMap ( $attr = null ) {
                         jQuery(document).ready(function(){
                               html_content = jQuery("#html_content").val();
                               var geocoder = new google.maps.Geocoder();
-                              var address = "' . $attr[ 'human_map_address' ] . '"; //Add your address here, all on one line.
+                              var address = "' . $address . '"; //Add your address here, all on one line.
 
                               var latitude;
                               var longitude;

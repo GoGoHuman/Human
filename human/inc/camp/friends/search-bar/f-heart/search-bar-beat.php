@@ -125,6 +125,6 @@ function human_search_bar ( $attr = null ) {
                         $value = esc_html ( $_GET[ 'results' ] );
             }
 
-            $bar = '<div class="wpb_column"><form method="get" action="' . site_url () . '/search/" class="human_search_form"><input type="textfield" class="form-elem" id="human_search_bar" placeholder="' . $placeholder . '" name="results" autocomplete="on" value="' . $value . '">' . $button . '</form></div>';
+            $bar = '<div class="wpb_column"><form method="get" action="' . site_url () . '/search/" class="human_search_form"><input type="text" class="form-elem" id="human_search_bar" placeholder="' . $placeholder . '" name="results" autocomplete="on" value="' . $value . '">' . $button . '</form></div>';
             return $bar;
 }

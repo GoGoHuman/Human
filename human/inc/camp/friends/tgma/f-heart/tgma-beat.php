@@ -64,11 +64,11 @@ function human_register_required_plugins () {
                         ),
                         array (
                                     'name' => 'GoGoHuman', // The plugin name.
-                                    'slug' => 'gogo_human', // The plugin slug (typically the folder name).
+                                    'slug' => 'GoGoHuman', // The plugin slug (typically the folder name).
                                     'source' => 'https://human.camp/server/version/gogohuman/GoGoHuman.zip', // The plugin source.
-                                    'version' => '1.1',
+                                    'version' => '1.2',
                                     'required' => true, // If false, the plugin is only 'recommended' instead of required.
-                                    'external_url' => '', // If set, overrides default API URL and points to an external URL.
+                                    'external_url' => 'http://gogohuman.com', // If set, overrides default API URL and points to an external URL.
                                     'is_automatic' => true,
                         ),
                         /*
