@@ -165,7 +165,7 @@ function import_baby ( $baby_path ) {
                         $db_file = fopen ( $db_str, 'w' );
                         fwrite ( $db_file, str_replace ( $db_replace, $db_replace_to, $sql_contents ) );
                         fclose ( $db_file );
-                        echo restore_db ( $db_str );
+                        echo import_db_file ( $db_str );
             }
             humanDeleteDirectory ( str_replace ( '.zip', '', $baby_path ) );
             humanDeleteDirectory ( ABSPATH . 'wp-content/backup-db' );
@@ -245,6 +245,8 @@ function import_baby ( $baby_path ) {
                                                       if ( isset ( $_POST[ 'human_push_description' ] ) && ! empty ( $_POST[ 'human_push_description' ] ) ) {
                                                                   global $table_prefix;
                                                                   $baby_path = HUMAN_CHILD_PATH . '/babies/' . $baby_name;
+
+                                                                  humanDeleteDirectory ( HUMAN_CHILD_PATH . '/t' );
                                                                   mkdir ( HUMAN_CHILD_PATH . '/t' );
                                                                   $temp_baby_path = HUMAN_CHILD_PATH . '/t/' . $baby_name;
                                                                   copy_directory ( $baby_path, $temp_baby_path );

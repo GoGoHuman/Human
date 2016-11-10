@@ -42,7 +42,7 @@ function human_vc_option () {
                                                 "class" => "human_option_class",
                                                 "heading" => __ ( "Human Option", "human" ),
                                                 "param_name" => "option",
-                                                "description" => __ ( "Enter wp option meta e.g. address", "human" )
+                                                "description" => __ ( "Enter wp option meta e.g. human-option-logo", "human" )
                                     ),
                                     array (
                                                 "type" => "textfield",
