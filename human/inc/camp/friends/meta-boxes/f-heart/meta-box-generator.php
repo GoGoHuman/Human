@@ -28,12 +28,19 @@ function human_meta_fields ( $post_id ) {
             }
 }
 
+function human_hide_editor () {
+            $post_type = get_post_type ( $_GET[ 'post' ] );
+            remove_post_type_support ( $post_type, 'editor' );
+}
+
 if ( isset ( $_GET[ 'post' ] ) && is_numeric ( $_GET[ 'post' ] ) && get_post_type ( $_GET[ 'post' ] ) !== null && ! in_array ( get_post_type ( $_GET[ 'post' ] ), array (
                         'human_templates',
                         'human_widgets',
                         'human_forms',
                         'human_loops' ) ) ) {
             if ( ! empty ( human_meta_fields ( $_GET[ 'post' ] ) ) ) {
+
+                        add_action ( 'admin_init', 'human_hide_editor' );
 
                         require_once( 'Custom-Meta-Boxes/custom-meta-boxes.php' );
 

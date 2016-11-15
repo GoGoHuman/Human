@@ -54,19 +54,10 @@ function human_register_required_plugins () {
                         //       'required' => true, // If false, the plugin is only 'recommended' instead of required.
                         ),
                         array (
-                                    'name' => 'Slider Revolution', // The plugin name.
-                                    'slug' => 'slider_reovlution', // The plugin slug (typically the folder name).
-                                    'source' => HUMAN_BASE_PATH . 'friends/tgma/f-heart/plugins/revslider.zip', // The plugin source.
-                                    'version' => '5.2.6',
-                                    'required' => false, // If false, the plugin is only 'recommended' instead of required.
-                                    'external_url' => '', // If set, overrides default API URL and points to an external URL.
-                                    'is_automatic' => true,
-                        ),
-                        array (
                                     'name' => 'GoGoHuman', // The plugin name.
                                     'slug' => 'GoGoHuman', // The plugin slug (typically the folder name).
                                     'source' => 'https://human.camp/server/version/gogohuman/GoGoHuman.zip', // The plugin source.
-                                    'version' => '1.2',
+                                    'version' => '1.3',
                                     'required' => true, // If false, the plugin is only 'recommended' instead of required.
                                     'external_url' => 'http://gogohuman.com', // If set, overrides default API URL and points to an external URL.
                                     'is_automatic' => true,

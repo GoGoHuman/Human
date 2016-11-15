@@ -212,7 +212,6 @@ function human_comment_author_meta ( $meta_name ) {
 add_shortcode ( 'human_comment_details', 'human_comment_details' );
 
 function human_comment_details ( $attr ) {
-// print_r($attr['attr'].'<hr>');
             return '<div class="' . strtolower ( $attr[ 'attr' ] ) . '">@human_get_' . strtolower ( $attr[ 'attr' ] ) . '@</div>';
 }
 
@@ -239,7 +238,6 @@ function human_get_post_image ( $attr = null ) {
 add_shortcode ( 'human_post_details', 'human_post_details' );
 
 function human_post_details ( $attr ) {
-//  print_r($attr['attr'].'<hr>');
             $type = strtolower ( $attr[ 'attr' ] );
 
             $count = 0;
@@ -400,7 +398,6 @@ function human_posts_loop ( $attr = null ) {
                         $post_id = 'tag_' . $tagname;
             }
 
-//print_r ( $post_id );
 
             $paged = 1;
             if ( isset ( $attr[ 'paged' ] ) ) {
@@ -412,7 +409,6 @@ function human_posts_loop ( $attr = null ) {
                         $post_number = $attr[ 'post_number' ];
             }
 
-//print_r($attr);
 
             $post_order = 'DESC';
             if ( isset ( $attr[ 'post_order' ] ) ) {
@@ -422,9 +418,7 @@ function human_posts_loop ( $attr = null ) {
                         $post_order = esc_html ( $_GET[ 'post-order' ] );
             }
             $post_type = 'post';
-            if ( isset ( $attr[ 'post_type' ] ) ) {
-                        $post_type = $attr[ 'post_type' ];
-            }
+
             $search_title = '';
             if ( isset ( $_GET[ 'results' ] ) && isset ( $attr[ 'human_search' ] ) ) {
                         $post_type = '';
@@ -441,7 +435,6 @@ function human_posts_loop ( $attr = null ) {
                                     $post_parent = $post_id;
                         }
                         else {
-                                    $post_type = get_post_type ();
                                     if ( is_tag () ) {
                                                 if ( get_query_var ( 'tag' ) ) {
                                                             $tagname = get_query_var ( 'tag' );
@@ -452,8 +445,22 @@ function human_posts_loop ( $attr = null ) {
                                                             $tagname = get_query_var ( 'cat' );
                                                 }
                                     }
+
+                                    $post_type = 'any';
+                                    $term = get_queried_object ();
+                                    if ( ! empty ( $term->label ) ) {
+
+                                                $term = get_queried_object ();
+
+                                                $post_type = $term->label;
+                                    }
                         }
             }
+
+            if ( isset ( $attr[ 'post_type' ] ) ) {
+                        $post_type = $attr[ 'post_type' ];
+            }
+
 
             $l_query = '';
             if ( isset ( $attr[ 'post_ids' ] ) ) {
@@ -475,7 +482,8 @@ function human_posts_loop ( $attr = null ) {
                                     'posts_per_page' => $post_number,
                                     'post_parent' => $post_parent );
             }
-            //   print_r ( $l_query );
+
+
             $the_query = new WP_Query ( $l_query );
 
 
@@ -485,8 +493,6 @@ function human_posts_loop ( $attr = null ) {
             if ( isset ( $attr[ 'thumb_size' ] ) ) {
                         if ( is_numeric ( $attr[ 'thumb_size' ] ) && $attr[ 'thumb_size' ] == 0 ) {
                                     $thumbsize = 0;
-
-// print_r ( $attr[ 'thumb_size' ] . '<hr>' );
                         }
                         elseif ( strpos ( $attr[ 'thumb_size' ], '/' ) !== false ) {
                                     $thumbsize = explode ( '/', $attr[ 'thumb_size' ] );
@@ -542,7 +548,6 @@ function human_posts_loop ( $attr = null ) {
                                     if ( get_option ( 'human_transient' ) ) {
                                                 $transidients = get_option ( 'human_transient' );
                                     }
-// print_r ( $attr[ 'human_looped_template' ] );
                                     $transidients[ 'human_featured_posts' ][ $attr[ 'human_looped_template' ] ] = $archive_layout;
                                     update_option ( 'human_transient', $transidients );
                         }
@@ -559,7 +564,6 @@ function human_posts_loop ( $attr = null ) {
             }
 
             $human_current_url = get_the_permalink ();
-//print_r ( $the_query );
 
             if ( $the_query->have_posts () ) {
 
@@ -578,9 +582,6 @@ function human_posts_loop ( $attr = null ) {
                                                             $thumb_id = get_post_thumbnail_id ();
                                                             $thumb_url_array = wp_get_attachment_image_src ( $thumb_id, $thumbsize, true );
                                                             $thumb_url = $thumb_url_array[ 0 ];
-
-//  print_r ( $attr[ 'thumb_size' ] );
-//print_r ( $thumb_url_array );
                                                             if ( $thumb_type === 'image' ) {
 
                                                                         $img = '<div class="human-recent-thumb"><img src="' . $thumb_url . '" alt=""></div>';
@@ -595,7 +596,6 @@ function human_posts_loop ( $attr = null ) {
                                                    ' . $img . '</a></div>';
                                                 }
                                                 else {
-// print_r ( $attr[ 'thumb_size' ] . '<hr>' );
                                                             $ready_thumb = '';
                                                 }
                                     }
@@ -689,7 +689,7 @@ function human_posts_loop ( $attr = null ) {
                                     $classes = '';
                                     $load_more_btn = '';
                         }
-                        $classes = $classes . $extraclass;
+                        $classes = $classes . $extraclass . ' ' . strtolower ( str_replace ( ' ', '_', $human_looped_template ) );
                         $result = do_shortcode ( $string );
                         wp_reset_postdata ();
                         return $search_title . '<div class="' . $classes . '">' . $result . $load_more_btn . '</div>';
@@ -862,7 +862,6 @@ function human_comment_loops ( $attr = null ) {
                         $all_comments[] = get_comment ( $v[ 'comment_ID' ] );
                         $count_comments+=$i;
             }
-//print_r($count_comments);print_r($comment_number);
             if ( count ( $count_comments ) >= $comment_number ) {
                         $count_comments = true;
             }
@@ -881,7 +880,6 @@ function human_comment_loops ( $attr = null ) {
                         $last_comment = end ( $comments_array )[ 'comment_ID' ];
             }
 
-//print_r('<hr>-----'.$last_comment.'<br>'.$querystr.'---------------------<hr>');
 
 
             foreach ( $all_comments as $key => $val ) {
@@ -968,19 +966,15 @@ function human_loop_ajax () {
                                     }
                                     $load_more = do_shortcode ( human_posts_loop ( $attr ) );
 
-// $response = do_shortcode($load_more);
                                     wp_send_json_success ( array (
                                                 'content' => $load_more ) );
                         }
                         else {
 
                                     $load_more_comments = do_shortcode ( stripcslashes ( $_POST[ 'data_extra' ] ) );
-// print_r(array($load_more_comments));
-// $response = do_shortcode($load_more);
                                     wp_send_json_success ( array (
                                                 'content' => $load_more_comments ) );
                         }
-//  print_r(array($load_more_comments));
             }
             else {
 

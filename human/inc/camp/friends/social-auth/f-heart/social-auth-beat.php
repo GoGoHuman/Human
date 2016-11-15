@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined ( 'ABSPATH' ) ) {
+            exit;
+} // Exit if accessed directly
+
 function human_refresh_popup () {
             return "<script>
           window.onunload = refreshParent;

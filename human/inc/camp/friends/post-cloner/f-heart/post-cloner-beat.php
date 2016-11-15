@@ -15,16 +15,19 @@ function human_duplicate_post_as_draft ( $ajax = null ) {
             /*
              * get the original post id
              */
-            if ( isset ( $ajax ) ) {
+            if ( isset ( $_GET[ 'post' ] ) ) {
+                        $post_id = $_GET[ 'post' ];
+            }
+            // print_r ( $post_id );
+            if ( isset ( $ajax ) && ! empty ( $ajax ) ) {
                         $post_id = $ajax;
                         $post_ajax = true;
             }
-            else {
-                        $post_id = (isset ( $_GET[ 'post' ] ) ? absint ( $_GET[ 'post' ] ) : absint ( $_POST[ 'post' ] ));
-            }
+
             /*
              * and all the original post data then
              */
+            //  var_dump ( $post_id );
             $post = get_post ( $post_id );
 
             /*

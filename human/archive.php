@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The template for displaying archive pages.
  *
@@ -9,13 +10,22 @@
 get_header ();
 
 $template = 'Archive';
-$post_type = ucwords ( get_post_type () );
-if (! empty ( do_shortcode ( '[human_template name="Archive ' . $post_type . '"]' ) )) {
-	$template = 'Archive ' . $post_type;
+
+
+
+$term = get_queried_object ();
+//print_r ( $term->label );
+$post_type = $term->label;
+
+if ( ! empty ( $post_type ) ) {
+            if ( ! empty ( do_shortcode ( '[human_template name="Archive ' . $post_type . '"]' ) ) ) {
+                        $template = 'Archive ' . $post_type;
+            }
 }
+//print_r ( '[human_template name="Archive ' . $post_type . '"]' );
 ?>
 
 
 
-<?php echo do_shortcode('[human_template name="'.$template.'"]')?>
-<?php get_footer(); ?>
+<?php echo do_shortcode ( '[human_template name="' . $template . '"]' ) ?>
+<?php get_footer (); ?>

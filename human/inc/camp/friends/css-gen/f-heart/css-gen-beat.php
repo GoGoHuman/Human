@@ -141,7 +141,7 @@ function cssGenAjax () {
 
                                     $style_custom = explode ( '/wp-content', HUMAN_BASE_PATH )[ 0 ] . "/wp-content/human-custom.css";
                                     $style_cstm = fopen ( $style_custom, "w" );
-                                    fwrite ( $style_cstm, $_POST[ 'custom_css' ] );
+                                    fwrite ( $style_cstm, stripslashes ( $_POST[ 'custom_css' ] ) );
                                     fclose ( $style_cstm );
                                     update_option ( 'HUMAN_CUSTOM_CSS', $_POST[ 'custom_css' ] );
                                     $human_fonts = fopen ( explode ( '/wp-content', HUMAN_BASE_PATH )[ 0 ] . "/wp-content/human-fonts.css", "w+" );

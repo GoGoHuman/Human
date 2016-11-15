@@ -14,7 +14,6 @@ function human_post_loop_vc_integrate () {
             $Templatetitles = human_template_names ( 'human_loops', 'Related Posts Template' );
             $TemplateTitle[] = "--- Select ---";
             foreach ( $Templatetitles as $key => $title ) {
-                        //print_r($title);
                         $TemplateTitle[ $title[ 'post_title' ] ] = $title[ 'post_title' ];
             }
             vc_map ( array (
@@ -50,16 +49,7 @@ function human_post_loop_vc_integrate () {
                                                 "param_name" => "post_ids",
                                                 "value" => "",
                                                 "description" => __ ( "e.g. 2,6,12,53; !!! attention - only works when post_type is set to post or page", "human" )
-                                    ), /*
-                                      array (
-                                      "type" => "textfield",
-                                      "holder" => "div",
-                                      "class" => "loop_id",
-                                      "heading" => __ ( "Unique ID", "human" ),
-                                      "param_name" => "loop_id",
-                                      "value" => "",
-                                      "description" => __ ( "e.g. right-sidebar-posts", "human" )
-                                      ), */
+                                    ),
                                     array (
                                                 "type" => "textfield",
                                                 "holder" => "div",
@@ -83,7 +73,7 @@ function human_post_loop_vc_integrate () {
                                                 "heading" => __ ( "Related Posts by Post_type", "human" ),
                                                 "param_name" => "post_type",
                                                 "value" => '',
-                                                "description" => __ ( "You can change it any custom type you've created or 'page'", "human" )
+                                                "description" => __ ( "You can change it any custom type you've created e.g. 'news'", "announ" )
                                     ),
                                     array (
                                                 "type" => "textfield",

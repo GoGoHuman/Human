@@ -12,7 +12,6 @@ function human_vc_integrate () {
             $human_template_names = human_template_names ( 'human_widgets' );
             $human_templates_name[] = "--- Select ---";
             foreach ( $human_template_names as $key => $human_templates_n ) {
-                        //print_r($title);
                         $human_templates_name[ $human_templates_n[ 'post_title' ] ] = $human_templates_n[ 'post_title' ];
             }
             vc_map ( array (
@@ -69,7 +68,6 @@ function human_vc_integrate () {
             $human_template_names = human_template_names ();
             $human_templates_name[] = "--- Select ---";
             foreach ( $human_template_names as $key => $human_templates_n ) {
-                        //print_r($title);
                         $human_templates_name[ $human_templates_n[ 'post_title' ] ] = $human_templates_n[ 'post_title' ];
             }
             vc_map ( array (
@@ -366,7 +364,6 @@ function human_vc_integrate () {
             $formtitles = human_template_names ( 'human_forms' );
             $formtitle[] = "--- Select ---";
             foreach ( $formtitles as $key => $title ) {
-                        //print_r($title);
                         $formtitle[ $title[ 'post_title' ] ] = $title[ 'post_title' ];
             }
 
@@ -408,7 +405,6 @@ function human_vc_integrate () {
             $cookieboxes = human_template_names ( 'human_widgets', 'Cookie Box' );
             $cookiebox[ "--- Select ---" ] = "";
             foreach ( $cookieboxes as $key => $title ) {
-                        //print_r($title);
                         $cookiebox[ $title[ 'post_title' ] ] = $title[ 'post_title' ];
             }
             vc_map ( array (

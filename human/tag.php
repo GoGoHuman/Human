@@ -9,12 +9,13 @@
  */
 get_header ();
 
-$template = 'Archive';
+$template = 'Tag';
 if ( is_tag () ) {
-            $cat = get_query_var ( 'tag' );
+            $tag = ' ' . ucwords ( get_query_var ( 'tag' ) );
 }
-if ( get_post_meta ( get_the_ID (), 'human_template' ) && ! empty ( get_post_meta ( get_the_ID (), 'human_template' )[ 0 ] ) ) {
-            $template = get_post_meta ( get_the_ID (), 'human_template' )[ 0 ];
+$post_type = ucwords ( get_post_type () );
+if ( ! empty ( do_shortcode ( '[human_template name="Tag' . $tag . '"]' ) ) ) {
+            $template = 'Tag' . $tag;
 }
 ?>
 

@@ -74,7 +74,7 @@ function human_search_bar_vc () {
 function human_search_scripts () {
             wp_enqueue_script ( 'jquery' );
             wp_enqueue_script ( 'jquery-ui-autocomplete' );
-            wp_register_style ( 'jquery-ui-styles', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' );
+            wp_register_style ( 'jquery-ui-styles', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' );
             wp_enqueue_style ( 'jquery-ui-styles' );
             wp_register_script ( 'human-search-bar-js', HUMAN_FRIENDS_URL . '/search-bar/f-character/temper/search-bar.js', array (
                         'jquery',

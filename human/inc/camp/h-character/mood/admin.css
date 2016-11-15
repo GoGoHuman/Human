@@ -393,3 +393,6 @@ div[data-vc-shortcode="human_templates_content_meta"] .vc_ui-panel-header-headin
 a.human_meta_manager {
         display: none!important;
 }
+.cmb-wysiwyg textarea {
+        height: 133px;
+}
