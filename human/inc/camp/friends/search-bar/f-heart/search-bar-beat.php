@@ -82,8 +82,15 @@ function human_search_scripts () {
             wp_enqueue_script ( 'human-search-bar-js' );
 }
 
+/**
+ * human_search
+ *
+ * @param human_search()
+ * @
+ */
 function human_search () {
-            $term = strtolower ( $_GET[ 'term' ] );
+            $term = sanitize_text_field ( $_GET[ 'term' ] );
+            $term = strtolower ( $term );
             $suggestions = array ();
 
             $loop = new WP_Query ( 's=' . $term );
@@ -91,7 +98,7 @@ function human_search () {
             while ( $loop->have_posts () ) {
                         $loop->the_post ();
                         $suggestion = array ();
-                        $suggestion[ 'label' ] = get_the_title ();
+                        $suggestion[ 'label' ] = html_entity_decode ( get_the_title () );
                         $suggestion[ 'permalink' ] = get_permalink ();
 
                         $suggestions[] = $suggestion;

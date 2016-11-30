@@ -150,7 +150,8 @@ function human_vc_integrate () {
                                                             __ ( "Email", "human" ) => "comment_email",
                                                             __ ( "Url", "human" ) => "comment_url",
                                                             __ ( "Comment area", "human" ) => "comment",
-                                                            __ ( "Hidden Field", "human" ) => "hidden"
+                                                            __ ( "Hidden Field", "human" ) => "hidden",
+                                                            __ ( "Rating Field", "human" ) => "star_rating"
                                                 ),
                                                 "description" => __ ( "Choose any form field", "human" )
                                     ),
@@ -314,6 +315,7 @@ function human_vc_integrate () {
                                                             __ ( "Content", "human" ) => "Content",
                                                             __ ( "Post Excerpt", "human" ) => 'Excerpt',
                                                             __ ( "Links to related categories", "human" ) => "the_category",
+                                                            __ ( "Rating", "human" ) => "Rating"
                                                 ),
                                                 "description" => __ ( "Choose Post Content Type", "human" )
                                     ),
@@ -342,7 +344,24 @@ function human_vc_integrate () {
                                                 "heading" => __ ( "Author Details", "human" ),
                                                 "param_name" => "author_names",
                                                 "value" => "",
-                                                "description" => __ ( "e.g. user_nicename,first_name,last_name <br> Coma separated without whitespace ref: https://codex.wordpress.org/Function_Reference/the_author_meta" )
+                                                "description" => __ ( "e.g. user_nicename,first_name,last_name <br> Coma separated without whitespace ref: https://codex.wordpress.org/Function_Reference/the_author_meta", "human" )
+                                    ),
+                                    array (
+                                                "type" => "textfield",
+                                                "holder" => "div",
+                                                "class" => "label_content'",
+                                                "heading" => __ ( "Label Content", "human" ),
+                                                "param_name" => "label_content",
+                                                "value" => ""
+                                    ),
+                                    array (
+                                                "type" => "textfield",
+                                                "holder" => "div",
+                                                "class" => "label_wrapper'",
+                                                "heading" => __ ( "Label Wrapper", "human" ),
+                                                "param_name" => "label_wrapper",
+                                                "value" => "",
+                                                "description" => __ ( "e.g. h2 or h3", "human" )
                                     ),
                         )
                         )

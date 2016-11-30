@@ -22,17 +22,24 @@ function human_post_contents ( $attr = null ) {
             if ( isset ( $attr ) && isset ( $attr[ 'content_type' ] ) ) {
                         $id = get_the_ID ();
                         $type = $attr[ 'content_type' ];
+                        $label_content = $w = '';
+                        if ( isset ( $attr[ 'label_content' ] ) ) {
+                                    $label_content = $attr[ 'label_content' ];
+                        }
+                        if ( isset ( $attr[ 'label_wrapper' ] ) ) {
+                                    $w = $attr[ 'label_wrapper' ];
+                                    $label_content = '<' . $w . '>' . $label_content . '</' . $w . '>';
+                        }
                         if ( $type === 'Title' ) {
-                                    return '<div  class="post-title"><h1 itemprop="name">' . get_the_title ( $id ) . '</h1></div>';
+                                    return $label_content . '<div  class="post-title"><h1 itemprop="name">' . get_the_title ( $id ) . '</h1></div>';
                         }
                         elseif ( $type === 'Date' ) {
+                                    $format = 'D M Y';
                                     if ( isset ( $attr[ 'date_format' ] ) ) {
                                                 $format = $attr[ 'date_format' ];
                                     }
-                                    else {
-                                                $format = 'd/m/y';
-                                    }
-                                    return '<time class="post-date" datetime="' . date ( DATE_ATOM, get_the_date ( $id, 'd-m-y h-m-s ' ) ) . '">' . get_the_date ( $id, $format ) . '</time>';
+                                    return $label_content . '<time class="post-date" datetime="' .
+                                                date ( DATE_ATOM, strtotime ( get_the_date ( 'd-m-y h-m-s ', $id ) ) ) . '">' . get_the_date ( $format, $id ) . '</time>';
                         }
                         elseif ( $type === 'Permalink' ) {
                                     $adon_class = '';
@@ -43,7 +50,7 @@ function human_post_contents ( $attr = null ) {
                                     if ( isset ( $attr[ 'permalink_text' ] ) ) {
                                                 $link_text = $attr[ 'permalink_text' ];
                                     }
-                                    return '<a href="' . get_permalink ( $id ) . '" class="' . $adon_class . '">' . $link_text . '</a>';
+                                    return $label_content . '<a href="' . get_permalink ( $id ) . '" class="' . $adon_class . '">' . $link_text . '</a>';
                         }
                         elseif ( $type === 'Image' ) {
 
@@ -64,7 +71,7 @@ function human_post_contents ( $attr = null ) {
                                     else {
                                                 $align = 'center';
                                     }
-                                    return '<div class="post-featured-img" style="">' . get_the_post_thumbnail ( $id, $size ) . '</div>';
+                                    return $label_content . '<div class="post-featured-img" style="">' . get_the_post_thumbnail ( $id, $size ) . '</div>';
                         }
                         elseif ( $type === 'Content' ) {
                                     $content_post = get_post ( $id );
@@ -74,7 +81,7 @@ function human_post_contents ( $attr = null ) {
                                                 $content = apply_filters ( 'the_content', $content );
                                                 $content = str_replace ( ']]>', ']]&gt;', $content );
                                     }
-                                    return '<div class="post-content">' . $content . '</div>';
+                                    return $label_content . '<div class="post-content">' . $content . '</div>';
                         }
                         elseif ( $type === 'Author' ) {
                                     $author_id = get_post_field ( 'post_author', $id );
@@ -82,9 +89,9 @@ function human_post_contents ( $attr = null ) {
                                                 $names = explode ( ',', trim ( $attr[ 'author_names' ] ) );
                                                 $author = '';
                                                 foreach ( $names as $key => $val ) {
-                                                            $author .= '<span class="post-author-meta">' . the_author_meta ( $val, $author_id ) . '</span>';
+                                                            $author .= '<div class="post-author-meta">' . get_the_author_meta ( $val, $author_id ) . '</div>';
                                                 }
-                                                return '<div class="post-author" style="">' . $author . '</div>';
+                                                return $label_content . '<div class="post-author" style="">' . $author . '</div>';
                                     }
                         }
                         elseif ( $type === 'Rating' ) {
@@ -94,18 +101,24 @@ function human_post_contents ( $attr = null ) {
                                     $i = 1;
                                     $total = 0;
                                     $total_rating = 0;
+                                    $count = 0;
+                                    $sum_of_all_rating = 0;
+                                    $star = $all = [ ];
+                                    //(sum_of_all_stars)/ (sum_of_all_ratings)
                                     foreach ( $comments as $key => $v ) {
                                                 if ( get_comment_meta ( $v->comment_ID, 'rating' ) ) {
                                                             $i ++;
                                                             $rating = get_comment_meta ( $v->comment_ID, 'rating' )[ 0 ];
+
                                                             $total +=$i;
                                                             $total_rating += $rating;
                                                             $all[] = $rating;
+                                                            $star[ $rating ] = $star[ $rating ] + $rating;
                                                 }
                                     }
                                     $total_count = count ( $all );
                                     if ( ! empty ( $total_rating ) ) {
-                                                $count = round ( ((5 * $total_count / 100) - ($total_rating / 100)) * 100, 1 );
+                                                $count = round ( $total_rating / $total_count, 1 );
                                     }
                                     $star = '';
                                     for ( $j = 1; $j < 6; $j ++ ) {
@@ -121,18 +134,36 @@ function human_post_contents ( $attr = null ) {
                                                             $star .= '<span class="fa fa-star-o"></span>';
                                                 }
                                     }
-                                    $extra = ' <div class="human-post-rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-		<div class="human-star-rating" title="' . __ ( 'Rated ', 'human' ) . $count . __ ( ' out of 5', 'human' ) . '
+                                    if ( ! empty ( $all ) ) {
+                                                $all = max ( $all );
+                                    }
+                                    else {
+                                                $all = 0;
+                                    }
+                                    $top_rating = $all;
+                                    if ( empty ( $top_rating ) ) {
+                                                $top_rating = 0;
+                                    }
+                                    if ( isset ( $attr[ 'schema' ] ) ) {
+                                                $schema = array (
+                                                            'reviewCount' => $total_count,
+                                                            'ratingValue' => $top_rating,
+                                                            'worstRating' => min ( $all )
+                                                );
+                                                return $schema;
+                                    }
+                                    $extra = ' <div class="human-post-rating">
+		<div class="human-star-rating" title="' . __ ( 'Rated ', 'human' ) . $count . __ ( ' out of 5', 'human' ) . '">
                                                                         <span style="width:' . $count . 'px">
 				<strong itemprop="ratingValue" class="rating">' . $count . '</strong>
-                                                                                                <span itemprop="bestRating">' . max ( $all ) . '</span>
+                                                                                                <span itemprop="bestRating">' . $top_rating . '</span>
 			                        <span itemprop="ratingCount" class="rating">' . $total_count . '</span>
 			</span>
                                                                         <span class="human-stars">' . $star . '</span>
 		</div>
 
 	       </div>';
-                                    return $extra;
+                                    return $label_content . $extra;
                         }
             }
 }
@@ -167,7 +198,7 @@ function human_get_post_date ( $attr = null ) {
             else {
                         $format = 'd/m/y';
             }
-            return '<time class="post-date" itemprop="date"  datetime="' . date ( DATE_ATOM, strtotime ( get_the_date ( $format, $id ) ) ) . '">'
+            return '<time class="post-date">'
                         . get_the_date ( $format, $id ) . '</time>';
 }
 
@@ -206,7 +237,7 @@ function human_comment_author_meta ( $meta_name ) {
             elseif ( $meta === 'avatar' ) {
                         $item_prop = 'itemprop="image"';
             }
-            return '<div class="' . $meta . '" ' . $item_prop . '>@author_meta_' . $meta_name[ 'meta_name' ] . '@</div>';
+            return '<div class="' . $meta . '">@author_meta_' . $meta_name[ 'meta_name' ] . '@</div>';
 }
 
 add_shortcode ( 'human_comment_details', 'human_comment_details' );
@@ -237,39 +268,12 @@ function human_get_post_image ( $attr = null ) {
 
 add_shortcode ( 'human_post_details', 'human_post_details' );
 
-function human_post_details ( $attr ) {
+function human_post_details ( $attr, $schema = null ) {
             $type = strtolower ( $attr[ 'attr' ] );
 
             $count = 0;
             $extra = '';
-            if ( $type === 'rating' ) {
-                        $comments = get_approved_comments ( get_the_ID () );
-                        $i = 1;
-                        $total = 0;
-                        $total_rating = 0;
-                        foreach ( $comments as $key => $v ) {
-                                    if ( get_comment_meta ( $v[ 'comment_ID' ], 'rating' ) ) {
-                                                $i ++;
-                                                $rating = get_comment_meta ( $v[ 'comment_ID' ], 'rating' );
-                                                $total +=$i;
-                                                $total_rating += $rating;
-                                                $all[] = $rating;
-                                    }
-                        }
-                        if ( ! empty ( $total_rating ) ) {
-                                    $count = ($total * 5) / 100 * $total_rating;
-                        }
-                        $extra = ' <div class="human-post-rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-		<div class="human-star-rating" title="' . __ ( 'Rated ', 'human' ) . $count . __ ( ' out of 5', 'human' ) . '
-                                                                        <span style="width:' . $count . 'px">
-				<strong itemprop="ratingValue" class="rating"></strong>
-                                                                                                <span itemprop="bestRating">' . max ( $count ) . '</span>
-			                        <span itemprop="ratingCount" class="rating">' . count ( $all ) . '</span>
-			</span>
-		</div>
 
-	       </div>';
-            }
             return '<div class="' . strtolower ( $attr[ 'attr' ] ) . '">' . $extra . '@human_get_' . strtolower ( $attr[ 'attr' ] ) . '@</div>';
 }
 
@@ -591,7 +595,6 @@ function human_posts_loop ( $attr = null ) {
                                                                         $img = '<div class="human-recent-thumb" style="background:url(\'' . $thumb_url . '\')"></div>';
                                                             }
 
-//- See more at: https://arjunphp.com/how-to-get-the-post-thumbnail-url-in-wordpress/#sthash.Zn6RIgFx.dpuf
                                                             $ready_thumb = '<div class="post-featured h-recent-post-inner"><a href="' . get_the_permalink () . '" rel="bookmark">
                                                    ' . $img . '</a></div>';
                                                 }
@@ -714,21 +717,35 @@ function human_comment_loops ( $attr = null ) {
             else {
                         $post_id = get_the_ID ();
             }
-
+            if ( isset ( $_GET[ 'clear-cache' ] ) ) {
+                        $clean_template = get_option ( 'human_transient' );
+                        unset ( $clean_template[ 'human_comments' ][ $attr[ 'human_looped_template' ] ] );
+                        update_option ( 'human_transient', $clean_template );
+            }
             if ( isset ( $attr[ 'human_looped_template' ] ) ) {
                         $human_looped_template = $attr[ 'human_looped_template' ];
-                        if ( ! isset ( get_option ( 'human_transient' )[ 'human_comments' ][ $attr[ 'human_looped_template' ] ] ) ) {
+                        $transient_template = get_option ( 'human_transient' )[ 'human_comments' ][ $attr[ 'human_looped_template' ] ];
+                        if ( ! isset ( $transient_template ) || empty ( $transient_template ) ) {
 
                                     $shortcode = '[human_template name="' . $attr[ 'human_looped_template' ] . '" type="human_loops"]';
-                                    $archive_layout = do_shortcode ( $shortcode );
+                                    if ( function_exists ( 'human_template' ) ) {
+                                                $archive_layout = human_template ( array (
+                                                            "name" => $attr[ 'human_looped_template' ],
+                                                            "type" => "human_loops" ) );
+                                    }
+                                    else {
+                                                die ( 'human_template() function cannot be found, <br>in ' . __FILE__ . ' on line' . __LINE__ );
+                                    }
+                                    $archive_layout = ' ' . do_shortcode ( $archive_layout );
                                     $human_looped_template = $attr[ 'human_looped_template' ];
                                     $transidients = get_option ( 'human_transient' );
-                                    $transidients[ 'human_comments' ][ $attr[ 'human_looped_template' ] ] = $archive_layout;
+                                    $transidients[ 'human_comments' ][ $attr[ 'human_looped_template' ] ] = trim ( $archive_layout );
                                     update_option ( 'human_transient', $transidients );
                         }
                         else {
                                     $archive_layout = get_option ( 'human_transient' )[ 'human_comments' ][ $attr[ 'human_looped_template' ] ];
                         }
+                        // print_r ( $archive_layout );
             }
             else {
                         exit;
@@ -817,7 +834,7 @@ function human_comment_loops ( $attr = null ) {
                         $comment_order = $attr[ 'comment_order' ];
             }
             else {
-                        $comment_order = 'ASC';
+                        $comment_order = 'DESC';
             }
 
             $cach_order = $comment_order;
@@ -851,7 +868,6 @@ function human_comment_loops ( $attr = null ) {
 
                         $querystr = "SELECT comment_ID FROM " . $table_prefix . "comments WHERE comment_ID=$comment_id AND comment_approved = 1";
             }
-
             $comments_array = $wpdb->get_results ( $querystr, ARRAY_A );
 
             $all_comments = [ ];
@@ -862,6 +878,7 @@ function human_comment_loops ( $attr = null ) {
                         $all_comments[] = get_comment ( $v[ 'comment_ID' ] );
                         $count_comments+=$i;
             }
+
             if ( count ( $count_comments ) >= $comment_number ) {
                         $count_comments = true;
             }
@@ -937,7 +954,7 @@ function human_comment_loops ( $attr = null ) {
                                                                        <div class="loading-gif comments-loading-gif" style="display:none"></div></div>';
                                     $classes = 'human-comments';
                         }
-                        return '<div class="' . $classes . '" itemprop="review" itemscope itemtype="http://schema.org/Review">' . $string . $load_more_btn . '</div>';
+                        return '<div class="' . $classes . '">' . $string . $load_more_btn . '</div>';
             }
 }
 
@@ -971,7 +988,8 @@ function human_loop_ajax () {
                         }
                         else {
 
-                                    $load_more_comments = do_shortcode ( stripcslashes ( $_POST[ 'data_extra' ] ) );
+                                    $load_more_comments = ' ' . do_shortcode ( stripcslashes ( $_POST[ 'data_extra' ] ) );
+                                    $load_more_comments = trim ( $load_more_comments );
                                     wp_send_json_success ( array (
                                                 'content' => $load_more_comments ) );
                         }

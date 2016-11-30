@@ -6,13 +6,14 @@
  *
  */
 
-if (!defined('ABSPATH') || !is_admin()) {
+if ( ! defined ( 'ABSPATH' ) || ! is_admin () ) {
             exit;
 } // Exit if accessed directly
 
-function backup_tables($dest, $exclude = null) {
+function backup_tables ( $dest, $exclude = null ) {
 
             require_once('lib/BackupClass.php');
             $human_bu = new wpdbBackup();
-            $human_bu->perform_backup($dest);
+            update_option ( 'test-dest', $dest );
+            $human_bu->perform_backup ( $dest );
 }

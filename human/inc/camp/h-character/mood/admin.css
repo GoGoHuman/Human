@@ -5,6 +5,25 @@
         min-width: 300px;
         display: block;
 }
+
+.human-loading-gif-wrapper{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(225,225,225,.2);
+        z-index:99999;
+        display:none;
+}
+.human-loading-gif-wrapper div {
+        width: 100%;
+        height: 100%;
+        background:url('../../../../../assets/images/icons/h-loading.gif');
+        background-repeat: no-repeat;
+        background-position: center center;
+}
+
 .meta_frame_wrapper {
         position: fixed;
         background: rgb(255, 255, 255);

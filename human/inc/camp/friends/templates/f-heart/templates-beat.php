@@ -182,7 +182,9 @@ function human_setup_options ( $import = 0 ) {
             return true;
 }
 
-add_action ( 'init', 'human_register_templates', 11 );
+if ( is_admin () ) {
+            add_action ( 'init', 'human_register_templates', 11 );
+}
 
 function human_register_templates () {
             register_post_type ( 'human_templates', array (
@@ -257,9 +259,10 @@ function human_remove_metabox () {
             remove_meta_box ( 'wpseo_meta', 'human_templates', 'normal' );
             remove_meta_box ( 'wpseo_meta', 'human_forms', 'normal' );
             remove_meta_box ( 'wpseo_meta', 'human_loops', 'normal' );
+            remove_meta_box ( 'wpseo_meta', 'human_tasks', 'normal' );
 }
 
-//add_action( 'add_meta_boxes', 'human_remove_metabox', 101 );
+//add_action ( 'add_meta_boxes', 'human_remove_metabox', 101 );
 
 function human_enqueue_template_scripts ( $hook ) {
             if ( 'post.php' != $hook && 'post-new.php' != $hook ) {
@@ -337,7 +340,7 @@ function human_template ( $attr, $content = null ) {
                         $type = 'human_templates';
             }
             if ( in_array ( 'comment', explode ( ' ', strtolower ( $name ) ) ) && comments_open ( $current_post_id ) !== true ) {
-                        return;
+                        //    return;
             }
             //   print_r ( explode ( '@', strtolower ( $name ) ) );
             if ( isset ( $attr[ 'hide_for_users' ] ) && is_user_logged_in () === true ) {
@@ -358,16 +361,19 @@ function human_template ( $attr, $content = null ) {
                         // $end .= '</article>';
             }
             global $table_prefix;
-            $result = $wpdb->get_var ( 'SELECT post_content FROM ' . $table_prefix . 'posts
+            $sql = 'SELECT post_content FROM ' . $table_prefix . 'posts
                                                               WHERE post_type = "' . $type . '"
-                                                              AND post_status ="publish" AND post_title = "' . $name . '"' );
+                                                              AND post_status ="publish" AND post_title = "' . $name . '"';
+
+
+            $result = $wpdb->get_var ( $sql );
             // $post = get_post_field($name, 'OBJECT',$type);
             //$content = apply_filters('the_content', );
             if ( empty ( $result ) ) {
+
                         return null;
             }
             else {
-                        // print_r($result);
                         //  print_r ( new_post_human_meta_filter ( get_post_field ( 'post_content' ), $result, 'x' ) . $result . '<hr>' );
 
                         $content = do_shortcode ( $result );

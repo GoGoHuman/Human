@@ -1,0 +1,45 @@
+[
+                      {
+                      "@context": "http://schema.org/",
+                      "@type": "product",
+                      "name": "Human Rating System",
+                      "image": "https://gogohuman.com/wp-content/uploads/2016/11/smartmockups-HUMAN-RATING.png",
+                      "description": "Can't see your website's ratings in Google search results? Our rating system is fully compatible with latest https:/schema.org API, to make sure all your hard work will be picked up by mayor search engines.",
+                      "mpn": "444645",
+
+                      "aggregateRating": {
+                      "@type": "AggregateRating",
+                      "ratingValue": "5",
+                      "reviewCount": "1"
+                      },
+
+                      "brand": {
+                      "@type": "Thing",
+                      "name": "GOGOHUMAN LIMITED"
+                      },
+                      "offers": {
+                      "@type": "Offer",
+                      "priceCurrency": "GBP",
+                      "price": "0.00",
+                      "priceValidUntil": "2017-11-24",
+                      "itemCondition": "https://schema.org/NewCondition",
+                      "availability": "https://schema.org/InStock",
+                      "seller": {
+                          "@type": "Organization",
+                           "name": "GOGOHUMAN LIMITED"
+                           }
+                      },
+                           "review":  [ {            "@type": "Review",
+                              "author": {
+                                   "@type":"Person","name": "Sergei Pavlov"},
+                              "datePublished": "2016-11-24 01:39:20",
+                              "name": "Human Rating System",
+                              "description": "Cool extension, as simple as that",
+                              "reviewRating": {
+                                   "@type": "Rating",
+                                    "bestRating": "5",
+                                   "ratingValue": "5",
+                                   "worstRating": "5"
+                              }
+                              }]
+                      }]

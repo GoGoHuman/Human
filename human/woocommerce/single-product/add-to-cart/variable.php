@@ -10,138 +10,73 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	https://docs.woothemes.com/document/template-structure/
+ * @see 	https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
  * @version 2.5.0
  */
-if ( ! defined ( 'ABSPATH' ) ) {
-            exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 global $product;
 
-$attribute_keys = array_keys ( $attributes );
+$attribute_keys = array_keys( $attributes );
 
-do_action ( 'woocommerce_before_add_to_cart_form' );
-?>
+do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 
-<form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo absint ( $product->id ); ?>" data-product_variations="<?php echo htmlspecialchars ( json_encode ( $available_variations ) ) ?>">
+<form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo absint( $product->id ); ?>" data-product_variations="<?php echo htmlspecialchars( json_encode( $available_variations ) ) ?>">
+	<?php do_action( 'woocommerce_before_variations_form' ); ?>
 
-          <div class="vc-row">
-                    <div class="wpb_column vc_column_container vc_col-sm-6">
-                            <?php do_action ( 'woocommerce_before_variations_form' ); ?>
+	<?php if ( empty( $available_variations ) && false !== $available_variations ) : ?>
+		<p class="stock out-of-stock"><?php _e( 'This product is currently out of stock and unavailable.', 'woocommerce' ); ?></p>
+	<?php else : ?>
+		<table class="variations" cellspacing="0">
+			<tbody>
+				<?php foreach ( $attributes as $attribute_name => $options ) : ?>
+					<tr>
+						<td class="label"><label for="<?php echo sanitize_title( $attribute_name ); ?>"><?php echo wc_attribute_label( $attribute_name ); ?></label></td>
+						<td class="value">
+							<?php
+								$selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( urldecode( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ) : $product->get_variation_default_attribute( $attribute_name );
+								wc_dropdown_variation_attribute_options( array( 'options' => $options, 'attribute' => $attribute_name, 'product' => $product, 'selected' => $selected ) );
+								echo end( $attribute_keys ) === $attribute_name ? apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' ) : '';
+							?>
+						</td>
+					</tr>
+				<?php endforeach;?>
+			</tbody>
+		</table>
 
-                              <?php if ( empty ( $available_variations ) && false !== $available_variations ) : ?>
-                                          <p class="stock out-of-stock"><?php _e ( 'This product is currently out of stock and unavailable.', 'woocommerce' ); ?></p>
-                              <?php else : ?>
+		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 
+		<div class="single_variation_wrap">
+			<?php
+				/**
+				 * woocommerce_before_single_variation Hook.
+				 */
+				do_action( 'woocommerce_before_single_variation' );
 
-                                          <?php
-                                          global $post;
-                                          $booking_dates = get_post_meta ( $post->ID, 'booking-dates', true );
-                                          $bd = [ ];
-                                          if ( $booking_dates ) {
-                                                      foreach ( $booking_dates as $b_date ) {
-                                                                  //    print_r ( $b_date );
-                                                                  $bd[] = '"' . $b_date[ 'select-a-date' ] . '"';
-                                                      }
-                                          }
-                                          ?>
+				/**
+				 * woocommerce_single_variation hook. Used to output the cart button and placeholder for variation data.
+				 * @since 2.4.0
+				 * @hooked woocommerce_single_variation - 10 Empty div for variation data.
+				 * @hooked woocommerce_single_variation_add_to_cart_button - 20 Qty and cart button.
+				 */
+				do_action( 'woocommerce_single_variation' );
 
-                                          <div class="human-date-picker ll-skin-cangas" id="date-picker-holder-<?php echo the_ID (); ?>"></div>
-                                          <input type="text" class="human-date-picker"  id="date-picker-<?php echo the_ID (); ?>" name="human-date-picker">
-                                          <script type="text/javascript">
+				/**
+				 * woocommerce_after_single_variation Hook.
+				 */
+				do_action( 'woocommerce_after_single_variation' );
+			?>
+		</div>
 
-                                                      jQuery ( document ).ready ( function ( $ ) {
+		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+	<?php endif; ?>
 
-                                                                var availableDates = [ <?php echo implode ( ',', $bd ); ?> ];
-
-                                                                function available ( date ) {
-                                                                          var currentMonth = date.getMonth () + 1;
-                                                                          if ( date.getMonth () + 1 < 10 ) {
-                                                                                          currentMonth = '0' + currentMonth;
-                                                                              }
-                                                                          dmy = date.getDate () + "-" + ( currentMonth ) + "-" + date.getFullYear ();
-                                                                          console.log ( dmy + ' : ' + ( $.inArray ( dmy, availableDates ) ) );
-                                                                          if ( $.inArray ( dmy, availableDates ) != -1 ) {
-                                                                                    return [ true, "", "Available" ];
-                                                                          } else {
-                                                                                    return [ false, "", "unAvailable" ];
-                                                                          }
-                                                                }
-                                                                $ ( "#date-picker-holder-<?php echo the_ID (); ?>" ).datepicker ( {
-                                                                          inline: true,
-                                                                          showOtherMonths: true,
-                                                                          dateFormat: "dd-mm-yy",
-                                                                          beforeShowDay: available,
-                                                                          onSelect: function ( selectedDate ) {
-                                                                                    $ ( '#date-picker-<?php echo the_ID (); ?>' ).val ( selectedDate );
-                                                                          },
-                                                                          firstDay: 1
-                                                                } );
-                                                      } );
-                                          </script>
-                                          <p>
-                                                    <span class="span_availability green-bg">&nbsp;</span> - Available
-                                                    <span class="span_availability red-bg">&nbsp;</span> - Fully Booked
-                                          </p>
-                                </div>
-                                <div class="wpb_column vc_column_container vc_col-sm-6">
-
-                                          <table class="variations" cellspacing="0">
-                                                    <tbody>
-            <?php foreach ( $attributes as $attribute_name => $options ) : ?>
-                                                                          <tr>
-                                                                                    <td class="label"><label for="<?php echo sanitize_title ( $attribute_name ); ?>"><?php echo wc_attribute_label ( $attribute_name ); ?></label></td>
-                                                                                    <td class="value">
-                                                                                            <?php
-                                                                                            $selected = isset ( $_REQUEST[ 'attribute_' . sanitize_title ( $attribute_name ) ] ) ? wc_clean ( urldecode ( $_REQUEST[ 'attribute_' . sanitize_title ( $attribute_name ) ] ) ) : $product->get_variation_default_attribute ( $attribute_name );
-                                                                                            wc_dropdown_variation_attribute_options ( array (
-                                                                                                        'options' => $options,
-                                                                                                        'attribute' => $attribute_name,
-                                                                                                        'product' => $product,
-                                                                                                        'selected' => $selected ) );
-                                                                                            echo end ( $attribute_keys ) === $attribute_name ? apply_filters ( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __ ( 'Clear', 'woocommerce' ) . '</a>' ) : '';
-                                                                                            ?>
-                                                                                    </td>
-                                                                          </tr>
-            <?php endforeach; ?>
-                                                    </tbody>
-                                          </table>
-
-                                                    <?php do_action ( 'woocommerce_before_add_to_cart_button' ); ?>
-
-                                          <div class="single_variation_wrap">
-                                                    <?php
-                                                    /**
-                                                     * woocommerce_before_single_variation Hook.
-                                                     */
-                                                    do_action ( 'woocommerce_before_single_variation' );
-
-                                                    /**
-                                                     * woocommerce_single_variation hook. Used to output the cart button and placeholder for variation data.
-                                                     * @since 2.4.0
-                                                     * @hooked woocommerce_single_variation - 10 Empty div for variation data.
-                                                     * @hooked woocommerce_single_variation_add_to_cart_button - 20 Qty and cart button.
-                                                     */
-                                                    do_action ( 'woocommerce_single_variation' );
-
-                                                    /**
-                                                     * woocommerce_after_single_variation Hook.
-                                                     */
-                                                    do_action ( 'woocommerce_after_single_variation' );
-                                                    ?>
-                                          </div>
-
-            <?php do_action ( 'woocommerce_after_add_to_cart_button' ); ?>
-                                </div>
-                      </div>
-            </form>
-<?php endif; ?>
-
-<?php do_action ( 'woocommerce_after_variations_form' ); ?>
-
+	<?php do_action( 'woocommerce_after_variations_form' ); ?>
+</form>
 
 <?php
-do_action ( 'woocommerce_after_add_to_cart_form' );
+do_action( 'woocommerce_after_add_to_cart_form' );

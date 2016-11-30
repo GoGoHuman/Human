@@ -9,9 +9,6 @@
 //	HybridAuth End Point
 // ------------------------------------------------------------------------
 
-if ( ! defined ( 'ABSPATH' ) ) {
-            exit;
-} // Exit if accessed directly
 
 require_once( "Hybrid/Auth.php" );
 require_once( "Hybrid/Endpoint.php" );

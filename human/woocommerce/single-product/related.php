@@ -10,60 +10,58 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woothemes.com/document/template-structure/
+ * @see 	    https://docs.woocommerce.com/document/template-structure/
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
  * @version     1.6.4
  */
-if ( ! defined ( 'ABSPATH' ) ) {
-            exit;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 global $product, $woocommerce_loop;
 
-if ( empty ( $product ) || ! $product->exists () ) {
-            return;
-}
-return;
-if ( ! $related = $product->get_related ( $posts_per_page ) ) {
-            return;
+if ( empty( $product ) || ! $product->exists() ) {
+	return;
 }
 
-$args = apply_filters ( 'woocommerce_related_products_args', array (
-            'post_type' => 'product',
-            'ignore_sticky_posts' => 1,
-            'no_found_rows' => 1,
-            'posts_per_page' => $posts_per_page,
-            'orderby' => $orderby,
-            'post__in' => $related,
-            'post__not_in' => array (
-                        $product->id )
-            ) );
+if ( ! $related = $product->get_related( $posts_per_page ) ) {
+	return;
+}
 
-$products = new WP_Query ( $args );
-$woocommerce_loop[ 'name' ] = 'related';
-$woocommerce_loop[ 'columns' ] = apply_filters ( 'woocommerce_related_products_columns', $columns );
+$args = apply_filters( 'woocommerce_related_products_args', array(
+	'post_type'            => 'product',
+	'ignore_sticky_posts'  => 1,
+	'no_found_rows'        => 1,
+	'posts_per_page'       => $posts_per_page,
+	'orderby'              => $orderby,
+	'post__in'             => $related,
+	'post__not_in'         => array( $product->id )
+) );
 
-if ( $products->have_posts () ) :
-            ?>
+$products                    = new WP_Query( $args );
+$woocommerce_loop['name']    = 'related';
+$woocommerce_loop['columns'] = apply_filters( 'woocommerce_related_products_columns', $columns );
 
-            <div class="related products">
+if ( $products->have_posts() ) : ?>
 
-                      <h2><?php _e ( 'Related Products', 'woocommerce' ); ?></h2>
+	<div class="related products">
 
-                      <?php woocommerce_product_loop_start (); ?>
+		<h2><?php _e( 'Related Products', 'woocommerce' ); ?></h2>
 
-                      <?php while ( $products->have_posts () ) : $products->the_post (); ?>
+		<?php woocommerce_product_loop_start(); ?>
 
-                                  <?php wc_get_template_part ( 'content', 'product' ); ?>
+			<?php while ( $products->have_posts() ) : $products->the_post(); ?>
 
-                      <?php endwhile; // end of the loop.  ?>
+				<?php wc_get_template_part( 'content', 'product' ); ?>
 
-            <?php woocommerce_product_loop_end (); ?>
+			<?php endwhile; // end of the loop. ?>
 
-            </div>
+		<?php woocommerce_product_loop_end(); ?>
 
-<?php
-endif;
+	</div>
 
-wp_reset_postdata ();
+<?php endif;
+
+wp_reset_postdata();

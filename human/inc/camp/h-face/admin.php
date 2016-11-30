@@ -3,7 +3,7 @@
  * @package: HUMAN
  * @subpackage: HUMAN ADMIN
  * @author: SergeDirect
- * @param: HUMAN ADMIN 
+ * @param: HUMAN ADMIN
  */
 if ( ! defined ( 'ABSPATH' ) ) {
             exit;
@@ -35,7 +35,10 @@ global $wpdb;
                                           $hapostcode = $_POST[ 'human-address-postcode' ];
                                           update_option ( 'human-option-hapostcode', $hapostcode );
                               }
-
+                              if ( isset ( $_POST[ 'business_name' ] ) ) {
+                                          $business_name = $_POST[ 'business_name' ];
+                                          update_option ( 'business_name', $business_name );
+                              }
                               $hapostcode = stripcslashes ( get_option ( 'human-option-hapostcode' ) );
                               if ( isset ( $_POST[ 'human-address-country' ] ) ) {
                                           $hacountry = $_POST[ 'human-address-country' ];
@@ -125,6 +128,8 @@ global $wpdb;
                     ?>
                     <h4>Copy / paste your Google analytics tracking ID:</h4>
                     <input name="HUMAN_ANALYTICS" placeholder="e.g. UA-74715244-1" value="<?php echo $analytics; ?>">
+                    <p>Business Name</p>
+                    <input type="text" name="business_name" value="<?php echo $business_name; ?>" placeholder="e.g. GOGOHUMAN LTD">
                     <p>Business Address</p>
                     <input type="text" name="human-address-street" placeholder="e.g. 15 Gentle's Entry" value="<?php echo $hastreet; ?>"><br>
                     <input type="text" name="human-address-postcode" placeholder="e.g. EH8 8PD" value="<?php echo $hapostcode; ?>"><br>
