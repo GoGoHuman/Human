@@ -32,7 +32,6 @@ class HumanCssGen {
                         wp_dequeue_style ( 'open-sans-css' );
                         $absurl = explode ( '/wp-content', HUMAN_BASE_URL )[ 0 ] . '/';
                         wp_enqueue_style ( 'human-fonts-css', $absurl . '/wp-content/human-fonts.css', array (), '123' );
-                        //wp_enqueue_style ( 'bsf-Defaults-css' );
                         wp_dequeue_style ( 'human-parent-css' );
                         wp_enqueue_style ( 'human-parent-css' );
 
@@ -44,8 +43,6 @@ class HumanCssGen {
 
                         wp_enqueue_style ( 'human-child-css', HUMAN_CHILD_URL . '/style.css', array (
                                     'human-custom-css' ) );
-
-                        wp_dequeue_style ( 'bsf-Defaults' );
             }
 
             public function get () {
@@ -92,72 +89,22 @@ function human_get_url_data ( $url ) {
             return $data;
 }
 
-add_action ( 'wp_ajax_organize_styles', 'organize_styles' );
-
-//print_r ( orginise_styles () );
-
-function organize_styles () {
-            check_ajax_referer ( 'ajax-human-nonce', 'nonce' );
-
-            if ( true ) {
-                        $all_styles = [ ];
-                        //update_option ( 'temp-styles', $_POST[ 'all_styles' ] );
-                        //      wp_send_json_success ( $_POST[ 'all_styles' ] );
-                        foreach ( $_POST[ 'all_styles' ] as $k => $v ) {
-                                    if ( strpos ( $v, ',' ) ) {
-                                                $all_styles[ $v ] = $v;
-                                    }
-                                    else {
-                                                $t = explode ( ' ', $v );
-
-                                                if ( isset ( $t[ 1 ] ) ) {
-
-                                                            if ( isset ( $t[ 2 ] ) ) {
-
-                                                                        $all_styles[ $t[ 0 ] ][ $t[ 1 ] ][ $t[ 2 ] ][] = $v;
-                                                            }
-                                                            else {
-
-                                                                        $all_styles[ $t[ 0 ] ][ $t[ 1 ] ][] = $v;
-                                                            }
-                                                }
-                                                else {
-
-                                                            $all_styles[ $t[ 0 ] ][] = $v;
-                                                }
-                                    }
-                        }
-                        wp_send_json_success ( $all_styles );
-            }
-}
-
 add_action ( 'wp_ajax_cssGenAjax', 'cssGenAjax' );
-
-//add_action ( 'wp_ajax_nopriv_cssGenAjax', 'cssGenAjax' );
+add_action ( 'wp_ajax_nopriv_cssGenAjax', 'cssGenAjax' );
 
 function cssGenAjax () {
             check_ajax_referer ( 'ajax-human-nonce', 'nonce' );
 
             if ( true ) {
-                        $css_folder = 'global';
-                        if ( isset ( $_POST[ 'section_folder' ] ) ) {
 
-
-                                    $new_section = '*'; // sanitize_text_field ( $_POST[ 'new_section' ] );
-
-                                    $css_folder = sanitize_text_field ( $_POST[ 'section_folder' ] );
-
-                                    if ( ! isset ( get_option ( 'human_css_sections' )[ $css_folder ] ) ) {
-
-                                                //  delete_option ( 'human_css_sections' );
-                                                if ( get_option ( 'human_css_sections' ) !== null ) {
-
-                                                            $sections = get_option ( 'human_css_sections' );
-                                                }
-                                                else {
-                                                            $sections = [ ];
-                                                }
-                                                //wp_send_json_success ( $sections );
+                        if ( isset ( $_POST[ 'new_section' ] ) && ! empty ( $_POST[ 'new_section' ] ) ) {
+                                    $new_section = sanitize_text_field ( $_POST[ 'new_section' ] );
+                                    $css_folder = 'global';
+                                    if ( isset ( $_POST[ 'section_folder' ] ) && ! empty ( $_POST[ 'section_folder' ] ) ) {
+                                                $css_folder = sanitize_text_field ( $_POST[ 'section_folder' ] );
+                                    }
+                                    if ( ! isset ( get_option ( 'human_css_sections' )[ $new_section ] ) ) {
+                                                $sections = get_option ( 'human_css_sections' );
                                                 $sections[ $css_folder ][ $new_section ] = $new_section;
 
                                                 update_option ( 'human_css_sections', $sections );
@@ -166,16 +113,15 @@ function cssGenAjax () {
                                     else {
                                                 $rep = 'exist';
                                     }
-
                                     $response = array (
-                                                'new_section' => $rep,
-                                                'css_folder' => $css_folder
+                                                'new_section' => '' . $rep . '',
+                                                'css_folder' => '' . $css_folder . ''
                                     );
                         }
                         elseif ( isset ( $_POST[ 'new_section' ] ) && empty ( $_POST[ 'new_section' ] ) ) {
                                     $rep = 'empty';
                                     $response = array (
-                                                'new_section' => $rep
+                                                'new_section' => '' . $rep . ''
                                     );
                         }
                         elseif ( isset ( $_POST[ 'style_gens_minified' ] ) ) {
@@ -265,7 +211,7 @@ function cssGenAjax () {
 }
 
 function human_palette_colors () {
-// delete_option ( 'human-color-palette' );
+            // delete_option ( 'human-color-palette' );
             if ( get_option ( 'human-color-palette' ) ) {
                         $colors = get_option ( 'human-color-palette' );
                         $palette = '';
@@ -295,7 +241,8 @@ function load_css_gen () {
             $css_builder = css_builder ( $css_font_list );
             echo $css_builder . '</div>';
 
-            echo '<div class="human-loading-gif-wrapper"> <div class="human-loading-gif"></div></div>';
+            echo '
+                      <div class="human-loading-gif-wrapper"> <div class="human-loading-gif"></div></div>';
 }
 
 function load_css_gen_scripts () {
@@ -323,7 +270,7 @@ function load_css_gen_scripts () {
                         'clear' => __ ( 'Clear' ),
                         'defaultString' => __ ( 'Default' ),
                         'pick' => __ ( 'Select Color' ) );
-// wp_localize_script( 'wp-color-picker', 'wpColorPickerL10n', $colorpicker_l10n );
+            // wp_localize_script( 'wp-color-picker', 'wpColorPickerL10n', $colorpicker_l10n );
 
 
             wp_enqueue_script ( 'css-gen-select-tag', HUMAN_BASE_URL . 'friends/css-gen/f-character/temper/select.tag.js', array (
@@ -337,7 +284,7 @@ function load_css_gen_scripts () {
 }
 
 if ( isset ( $_GET[ 'vc_action' ] ) && $_GET[ 'vc_action' ] === 'vc_inline' && current_user_can ( 'administrator' ) ) {
-//   load_css_gen();
+            //   load_css_gen();
             add_action ( 'admin_footer', 'load_css_gen' );
             add_action ( 'admin_enqueue_scripts', 'load_css_gen_scripts', 99 );
 }

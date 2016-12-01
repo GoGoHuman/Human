@@ -20,18 +20,3 @@
 .search_tag *{
         cursor:url('../../../assets/images/search.png') 32 32, default;
 }
-.mega-menu .related_post_wrapper {
-        max-width: 200px;
-        float: left;
-}
-.mega-menu .related_posts_template {
-        background: #fff;
-        display: flex;
-        margin-top: 15px;
-        text-align: center;
-        padding: 5px 10px;
-}
-.mega-menu .human-recent-thumb img {
-        width: 180px;
-        height: 100px;
-}

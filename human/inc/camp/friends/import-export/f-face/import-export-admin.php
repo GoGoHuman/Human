@@ -1,5 +1,26 @@
 <?php
-/* *
+/* █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████HUMAN THEME FRAMEWORK██████████████████████████████████████████
+ * ████████████████████████████████████████████████████████████<https://human.camp>████████████████████████████████████████████████████
+ * ██████████████████████████████████████████████████        support@human.camp        █████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████                   █████████████████████████████████████████████████████████████████
+ * ███████████████████████████████████████████████      ██████████   ████████████    ████████       ████████████████████████████████████████████████████
+ * █████████████████████████████████████████████      ██████████   ███      ███    ████████       ██████████████████████████████████████████████████████
+ * ███████████████████████████████████████████      ██████████████     ███    ███████████       ████████████████████████████████████████████████████████
+ * █████████████████████████████████████████      █████████████████████████████████████       ██████████████████████████████████████████████████████████
+ * ████████████████████████████████████████                                                 ████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████               HUMAN               ████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████                                       █████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████       █████████████████████       █████████████████████████████████████████████████████████████████████████
+ * ████████████████████████████████████████      ██████████████████████      ███████████████████████████████████████████████████████████████████████████
+ * ███████████████████████████████████████     ██████████████████████      █████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ * █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ *
  * @param Human Import - Export
  * @author SergeDirect <itpal24@gmail.com>
  *
@@ -61,7 +82,7 @@ function copy_directory ( $source1, $dest1, $permissions = 0755 ) {
                                     //     echo "<br>" . $dest . "File exist and overriten";
                         }
                         if ( strpos ( $dest, '_translationstatus' ) > 0 ) {
-                                    return;
+                                    echo '<br>Uncopatible file';
                         }
                         $contents = file_get_contents ( $source );
 
@@ -153,38 +174,40 @@ function import_baby ( $baby_path ) {
 ?>
 
 
-<style>
 
-          .human_page_human-import-export-settings .human-loading-gif-wrapper {
-                  width: 309px;
-                  height: 151px;
-                  top: 127px;
-                  left: 176px;
-                  position: absolute;
-                  z-index: 2;
-          }
-
-</style>
 <div class="wrap human_wrapper" id="human_setting_wrapper">
 
           <?php
 //   print ob_get_level ();
-// print_r ( get_option ( 'human-backup' ) );
           if ( isset ( $_POST[ 'template_name' ] ) ) {
                       ob_start ();
                       echo "Backup started...<br>";
                       ob_flush ();
-          }
-          if ( isset ( $_GET[ 'clear-bp-cron' ] ) ) {
-                      update_option ( 'human-backup', 2 );
 
-                      wp_clear_scheduled_hook ( 'human_backup_hook' );
-                      echo '<script>location.assign(\'?page=human-import-export-settings\' );</script>';
+
+                      if ( isset ( $_POST[ 'mysqldump_path' ] ) ) {
+                                  update_option ( 'human-mysqldump-path', esc_html ( $_POST[ 'mysqldump_path' ] ) );
+                      }
+
+                      $template_name = str_replace ( array (
+                                  ' ',
+                                  ',' ), '-', $_POST[ 'template_name' ] );
+
+
+                      $directory = HUMAN_CHILD_PATH . '/babies/';
+
+                      require_once(HUMAN_BASE_PATH . 'friends/backup/f-heart/lib/human-zip.php');
+                      CreateWPFullBackupZip ( $template_name, $zipmode = 1 );
+
+                      $template_created = $template_name;
+          }
+
+          if ( isset ( $template_created ) ) {
+                      echo '<h4 style="color:blue">' . $template_created . ' Baby Created</h4>';
+                      ob_end_flush ();
           }
           ?>
-
-          <h4 style="color:blue" class="baby-created"></h4>
-          <form method="post" id="new-baby-form">
+          <form method="post">
                     <h3>Save as Template</h3>
                     <?php
                     if ( strtoupper ( substr ( PHP_OS, 0, 3 ) ) === 'WIN' ) {
@@ -194,15 +217,14 @@ function import_baby ( $baby_path ) {
                                 }
 
                                 echo '<b>Please enter full path to mysql</b><br><b style="color:green">e.g. "C:/xampp/mysql/bin/mysqldump"</b><br>';
-                                echo '<input type="text" name="mysqldump_path" id="mysqldump_path" value="' . $mysqlpath . '" class="form-300">';
+                                echo '<input type="text" name="mysqldump_path" value="' . $mysqlpath . '" class="form-300">';
                     }
                     else {
                                 //  echo 'This is a server not using Windows!';
                     }
                     ?>
-                    <input name="template_name" id="template_name" placeholder="url friendly e.g. pink_template"  class="form-300">
+                    <input name="template_name" placeholder="url friendly e.g. pink_template"  class="form-300">
                     <button type="submit">Save</button>
-                    <a href="?page=human-import-export-settings&clear-bp-cron=1" style="float:right">Clear Backup cron</a>
           </form>
           <hr>
 
@@ -230,15 +252,13 @@ function import_baby ( $baby_path ) {
                                                                   copy_directory ( $baby_path, $temp_baby_path );
                                                                   $temp_url = HUMAN_CHILD_URL . '/t/' . $baby_name;
                                                                   $human_partner_api = 'https://human.camp/api/partners.php?desc=' . urlencode ( $_POST[ 'human_push_description' ] ) . '&demo_url=' . home_url () . '&temp_url=' . urlencode ( $temp_url ) . '&pre=' . $table_prefix;
-                                                                  $response = wp_remote_get ( $human_partner_api, array (
-                                                                              'timeout' => 20 ) );
+
+                                                                  $response = wp_remote_get ( $human_partner_api );
                                                                   if ( is_array ( $response ) ) {
                                                                               print_r ( $response[ 'body' ] );
                                                                   }
                                                                   else {
-                                                                              echo 'Fatal Error: Opps, there was a problem to upload ' . $baby_name . ' package to Human Marketplace in ' . __FILE__ . ' on line ' . __LINE__ . '<br>Response from Human:<br>';
-                                                                              print_r ( $response );
-                                                                              echo '<br>Request url:</br>' . $human_partner_api;
+                                                                              echo 'Fatal Error: Opps, there was a problem to upload ' . $baby_name . ' package to Human Marketplace in ' . __FILE__ . ' on line ' . __LINE__;
                                                                               exit;
                                                                   }
 
@@ -303,19 +323,19 @@ function import_baby ( $baby_path ) {
 
                     <input type="radio" name="baby_push" id="push_to_human" value="2"> - Select here if you want to submit this version to Human Market Place
                     <script>
-				jQuery ( document ).ready ( function ( $ ) {
-					$ ( '#push_to_human' ).on ( 'click', function () {
-						if ( $ ( this ).is ( ':checked' ) ) {
-							$ ( '#human_push_description' ).fadeIn ();
-						} else {
+                                jQuery ( document ).ready ( function ( $ ) {
+                                          $ ( '#push_to_human' ).on ( 'click', function () {
+                                                    if ( $ ( this ).is ( ':checked' ) ) {
+                                                              $ ( '#human_push_description' ).fadeIn ();
+                                                    } else {
 
-							$ ( '#human_push_description' ).fadeOut ();
-						}
-					} );
-					$ ( '.toggle-push' ).on ( 'click', function () {
-						$ ( '#human_push_description' ).fadeOut ();
-					} );
-				} );
+                                                              $ ( '#human_push_description' ).fadeOut ();
+                                                    }
+                                          } );
+                                          $ ( '.toggle-push' ).on ( 'click', function () {
+                                                    $ ( '#human_push_description' ).fadeOut ();
+                                          } );
+                                } );
                     </script>
                     <p>&nbsp;</p>
                     <hr>
@@ -402,19 +422,19 @@ function import_baby ( $baby_path ) {
 
                     </div>
                     <script>
-				jQuery ( document ).ready ( function ( $ ) {
-					$ ( 'a.to-preview' ).on ( 'click', function ( e ) {
-						e.preventDefault ();
-						//  alert ( 'prevew started' );
-						$ ( '#preview_frame_wrapper' ).append ( '<iframe src="'+$ ( this ).attr ( 'data-url' )+'" style="width:90%;height:90vh;position:relative;top:5vh;left:5%"></iframe>' );
-						$ ( '#preview_frame_wrapper' ).fadeIn ();
+                                jQuery ( document ).ready ( function ( $ ) {
+                                          $ ( 'a.to-preview' ).on ( 'click', function ( e ) {
+                                                    e.preventDefault ();
+                                                    //  alert ( 'prevew started' );
+                                                    $ ( '#preview_frame_wrapper' ).append ( '<iframe src="' + $ ( this ).attr ( 'data-url' ) + '" style="width:90%;height:90vh;position:relative;top:5vh;left:5%"></iframe>' );
+                                                    $ ( '#preview_frame_wrapper' ).fadeIn ();
 
-					} );
-					$ ( '#preview_frame_wrapper a.toggle' ).on ( 'click', function ( e ) {
-						e.preventDefault ();
-						$ ( '#preview_frame_wrapper' ).fadeOut ();
-					} );
-				} );
+                                          } );
+                                          $ ( '#preview_frame_wrapper a.toggle' ).on ( 'click', function ( e ) {
+                                                    e.preventDefault ();
+                                                    $ ( '#preview_frame_wrapper' ).fadeOut ();
+                                          } );
+                                } );
                     </script>
                     <span style="clear:both"></span>
           </div>

@@ -141,22 +141,22 @@ function human_form_elems ( $attr = null ) {
                         $elems .= '<input type="text" name="' . $name . '"  id="' . $unique_id . '" class="human_calendar form-elem ' . $ftype . '" placeholder="' . $placeholder . '" aria-required="' . $required . '" aria-invalid="false" value="' . $eval . '"  title="' . $title . '" >';
                         ?>
                         <script>
-                        	    jQuery ( document ).
-                        		      ready ( function ( $ ) {
-                        			      $ ( function () {
-                        				      $ ( ".human_calendar" ).
-                        						datepicker ( {
-                        							minDate: 0,
-                        							beforeShow: function () {
-                        								if ( !$ ( '.ll-skin-siena' ).length ) {
-                        									$ ( '#ui-datepicker-div' ).
-                        										  wrap ( '<div class="ll-skin-siena"></div>' );
-                        								}
-                        							}
-                        						} );
+                                    jQuery ( document ).
+                                              ready ( function ( $ ) {
+                                                        $ ( function () {
+                                                                  $ ( ".human_calendar" ).
+                                                                            datepicker ( {
+                                                                                      minDate: 0,
+                                                                                      beforeShow: function () {
+                                                                                                if ( !$ ( '.ll-skin-siena' ).length ) {
+                                                                                                          $ ( '#ui-datepicker-div' ).
+                                                                                                                    wrap ( '<div class="ll-skin-siena"></div>' );
+                                                                                                }
+                                                                                      }
+                                                                            } );
 
-                        			      } );
-                        		      } );
+                                                        } );
+                                              } );
                         </script>
 
                         <?php
@@ -330,20 +330,6 @@ function human_form ( $attr ) {
             return $form;
 }
 
-function human_pre_comment_approved ( $approved, $commentdata ) {
-            // you can return 0, 1 or 'spam'
-            if ( $commentdata[ 'user_ID' ] ) {
-                        $args = array (
-                                    'user_id' => $commentdata[ 'user_ID' ],
-                                    'post_id' => $commentdata[ 'comment_post_ID' ]
-                        );
-                        $usercomment = get_comments ( $args );
-                        if ( 1 <= count ( $usercomment ) )
-                                    return 0;
-            }
-            return $approved;
-}
-
 add_action ( 'wp_ajax_cssFormAjax', 'cssFormAjax' );
 add_action ( 'wp_ajax_nopriv_cssFormAjax', 'cssFormAjax' );
 
@@ -449,7 +435,6 @@ function cssFormAjax () {
                                     "comment_post_id" => $comment_post_id,
                                     "form_notify" => $form_notify
                         );
-
                         $respond[ 'data' ] = $res;
 
                         if ( ! empty ( $form_notify ) ) {
@@ -542,11 +527,6 @@ function cssFormAjax () {
 
                                                 if ( $data[ 'comment_approved' ] !== 'spam' ) {
                                                             $comment_id = wp_new_comment ( $data );
-                                                            if ( isset ( $commentMetas[ 'rating' ] ) ) {
-
-                                                                        update_comment_meta ( $comment_id, 'rating', $commentMetas[ 'rating' ] );
-                                                                        update_post_meta ( $res[ 'post_id' ], 'new-review', 1 );
-                                                            }
                                                             if ( $data[ 'comment_approved' ] === 1 ) {
 
                                                             }

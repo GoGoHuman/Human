@@ -44,10 +44,6 @@ require HUMAN_BASE_PATH . 'h-heart/init.php';
 
 
 define ( 'HUMAN_DER_SEP', DIRECTORY_SEPARATOR );
-
-/*
- * @global HUMAN_FRIENDS_PATH @global Path to friends directory, without slash
- */
 define ( 'HUMAN_FRIENDS_PATH', HUMAN_BASE_PATH . 'friends' );
 define ( 'HUMAN_FRIENDS_URL', HUMAN_BASE_URL . 'friends' );
 define ( 'HUMAN_CHILD_FRIENDS_PATH', HUMAN_CHILD_BASE_PATH . 'friends' );
@@ -222,9 +218,6 @@ function human_admin_settings ( $friend_name ) {
             }
             else {
 
-                        wp_enqueue_script ( 'human-friend-admin-script', HUMAN_FRIENDS_URL . '/' . $friend_name . '/f-character/temper/' . $friend_name . '-admin.js', array (
-                                    'jquery',
-                                    'human-admin-script' ) );
                         echo human_admin_header ();
                         require HUMAN_BASE_PATH . 'friends/' . $friend_name . '/f-face/' . $friend_name . '-admin.php';
             }

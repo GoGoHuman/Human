@@ -1373,66 +1373,9 @@ ul.sub-menu .menu-item-has-children {
         margin-top: 5px;
 }
 .loading-gif.comments-loading-gif {
-        margin-top: 40px;
+        margin-top: 9px;
 }
-.loading-gif.comments-loading-gif:after {
-        width: 27px;
-        height: 27px;
-}
-.logged-in .human-social-login,.logged-in .human-social-login-comments {
+.logged-in .human-social-login-comments {
         display: none;
-}
-.logged-in .form-elem-wrapper.elem-comment_author, .logged-in .form-elem-wrapper.elem-comment_email {
-        position: fixed;
-        top: -1000%;
-}
-.human-comment-template {
-        padding-top: 70px;
-}
-.human-post-rating span[itemprop] {
-        float: right;
-        padding: 10px 5px;
-        text-align: center;
-        border: 1px solid #1d63a9;
-}
-span[itemprop]:before, strong[itemprop]:before {
-        content: "TOP";
-        display: block;
-        font-size: 12px;
-}
-span[itemprop="ratingCount"]:before {
-        content: "TOTAL";
-}
-.human-star-rating span.human-stars {
-        font-size: 31px;
-        color: rgb(236, 236, 10);
-}
-
-strong[itemprop="ratingValue"]:before {
-        content: "AVARAGE";
-}
-.human-post-rating span[itemprop], .human-post-rating strong[itemprop] {
-        float: right;
-        padding: 10px 5px;
-        text-align: center;
-        border: 1px solid #1d63a9;
-}
-.human-tags {
-        position: relative;
-        display: inline-block;
-        padding-bottom: 30px;
-}
-blockquote {
-        padding-left: 66px;
-        font-weight: 600;
-}
-blockquote:before {
-        display: block;
-        content: '"';
-        position: absolute;
-        left: 36px;
-        font-size: 55px;
-        margin-top: -24px;
-        color: #ecec0a;
 }
 

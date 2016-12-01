@@ -118,9 +118,9 @@ function css_builder ( $css_font_list ) {
                               ?>
                       </textarea>
                       <script>
-            		      jQuery ( document ).ready ( function () {
+                                  jQuery ( document ).ready ( function () {
 
-            		      } );</script>
+                                  } );</script>
                       <div class="row ui-draggable-handle human-top-controls radius-top-right">
                                 <div>
                                           <table>
@@ -131,8 +131,7 @@ function css_builder ( $css_font_list ) {
                                                               </td>
 
                                                               <td class="css-top-bar-column">
-                                                                        <input type="hidden" value="" id="selector_ignore_res" class="">
-                                                                        <input type="text" id="human_screen_res" class="page-title-action"  placeholder="Screen: Desktop">
+                                                                        <input type="text" id="human_screen_res" class="page-title-action" disabled placeholder="Screen: Desktop">
 
 
                                                                         <span class="toggle-css page-title-action" data-toggle="main-css-div-holder"><></span>
@@ -143,7 +142,7 @@ function css_builder ( $css_font_list ) {
                                                     </tr>
 
                                           </table>
-                                          <table style="display:none">
+                                          <table>
                                                     <tr>
                                                               <td style="" class="human-top-controls-inner">
                                                                         <div style="display:none" id="section_folder_tags">Global<?php echo $css_folders_list; ?></div>

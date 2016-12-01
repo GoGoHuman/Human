@@ -24,25 +24,7 @@ function human_templates_content_meta ( $attr, $content = null ) {
             else {
                         $values = '<div class="human-image" meta-post-id="' . $attr[ 'meta_id' ] . '" meta-post-type=' . $attr[ 'meta_type' ] . '><img src="' . $value . '" alt="" class="meta-image-' . $attr[ 'meta_id' ] . '"></div>';
             }
-            $res = ' ' . do_shortcode ( $values );
-            return trim ( $res );
-}
-
-add_shortcode ( 'human_content_meta', 'human_content_meta' );
-
-function human_content_meta ( $attr ) {
-            if ( isset ( $attr[ 'wck' ] ) ) {
-                        if ( isset ( get_post_meta ( get_the_ID (), $attr[ 'wck' ], true )[ 0 ] ) ) {
-                                    $testimonial_entry = get_post_meta ( get_the_ID (), $attr[ 'wck' ], true )[ 0 ];
-                                    //  print_r ( $attr[ 'meta_id' ] );
-                                    if ( ! empty ( $testimonial_entry[ $attr[ 'meta_id' ] ] ) ) {
-                                                return $testimonial_entry[ $attr[ 'meta_id' ] ];
-                                    }
-                        }
-            }
-            else {
-                        return get_post_meta ( get_the_ID (), $attr[ 'meta_id' ], true )[ 0 ];
-            }
+            return $values;
 }
 
 if ( is_admin () ) {
@@ -64,33 +46,7 @@ if ( is_admin () ) {
                                                             "heading" => __ ( "Meta ID", "human" ),
                                                             "param_name" => "meta_id",
                                                             "value" => "",
-                                                            "description" => __ ( "e.g. 'description'", "human" )
-                                                ) )
-                        ) );
-                        vc_map ( array (
-                                    "name" => __ ( "Human Content Meta", "human" ),
-                                    "base" => "human_content_meta",
-                                    "class" => "human_content_meta",
-                                    "category" => __ ( "Human Content", "human" ),
-                                    "icon" => human_icon (),
-                                    "params" => array (
-                                                array (
-                                                            "type" => "textfield",
-                                                            "holder" => "div",
-                                                            "class" => "human_meta_post",
-                                                            "heading" => __ ( "Meta ID", "human" ),
-                                                            "param_name" => "meta_id",
-                                                            "value" => "",
-                                                            "description" => __ ( "e.g. 'descripiton'", "human" )
-                                                ),
-                                                array (
-                                                            "type" => "textfield",
-                                                            "holder" => "div",
-                                                            "class" => "human_meta_post",
-                                                            "heading" => __ ( "WCK Meta Group Name", "human" ),
-                                                            "param_name" => "wck",
-                                                            "value" => "",
-                                                            "description" => __ ( "e.g. 'postdescription'", "human" )
+                                                            "description" => __ ( "e.g. 'logo-top'", "human" )
                                                 ) )
                         ) );
                         vc_map ( array (
@@ -157,7 +113,7 @@ if ( is_admin () ) {
                                                             "heading" => __ ( "Post ID", "human" ),
                                                             "param_name" => "meta_post_id",
                                                             "value" => __ ( "1", "human" ),
-                                                            "description" => __ ( "Don't edit this ! ", "human" )
+                                                            "description" => __ ( "Don't edit this!", "human" )
                                                 ),
                                     )
                         ) );
@@ -173,14 +129,12 @@ if ( is_admin () ) {
                                     $defaults[ $v ] = $post->$v;
                         }
 
-                        //  $defaults[  'guid' ] = get_permalink ( $post->ID );
+                        //  $defaults[ 'guid' ] = get_permalink ( $post->ID );
                         return $defaults;
             }
 
-            if ( isset ( $_GET[ 'post_type' ] ) && is_admin () ) {
-                        if ( $_GET[ 'post_type' ] === 'human_templates' || $_GET[ 'post_type' ] === 'human_widgets' || $_GET[ 'post_type' ] === 'human_forms' || $_GET[ 'post_type' ] === 'human_loops' ) {
-                                    add_action ( 'admin_enqueue_scripts', 'human_meta_boxes_scripts' );
-                        }
+            if ( ! isset ( $_GET[ 'vc_action' ] ) ) {
+                        add_action ( 'admin_enqueue_scripts', 'human_meta_boxes_scripts' );
             }
 
             function human_meta_boxes_scripts () {
@@ -342,8 +296,7 @@ if ( is_admin () ) {
 
             function humanGetImageIdByUrl ( $url ) {
                         global $wpdb;
-                        $image = $wpdb->get_col ( $wpdb->prepare ( "SELECT ID FROM $wpdb->posts WHERE guid = '%s';
-", $url ) );
+                        $image = $wpdb->get_col ( $wpdb->prepare ( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $url ) );
 
                         if ( ! empty ( $image ) ) {
                                     return $image[ 0 ];
@@ -439,7 +392,7 @@ if ( is_admin () ) {
                                                                                     $metas[ $value[ 'id' ] ] = $value;
                                                                         }
                                                                         else {
-//$metas = $value[  'id' ];
+//$metas = $value[ 'id' ];
                                                                         }
                                                             }
                                                             update_post_meta ( $_POST[ 'post_id' ], 'human_meta_boxes', $metas );
