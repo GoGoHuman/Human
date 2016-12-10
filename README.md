@@ -11,7 +11,7 @@ Tools powered by Visual Composer
 
 Lot's of other functionalities:
 
-Find more about Human 'friends' @ <a href="https://hohohuman.com/friends/">GoGoHuman.com</a>
+Find more about Human 'friends' @ <a href="https://gogohuman.com/friends/">GoGoHuman.com</a>
 
 
 For installation go to:
