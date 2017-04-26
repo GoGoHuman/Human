@@ -1,19 +1,6 @@
 # Human Theme Framework for Wordpress
+# This Project has been currently put on hold and we provide support exclusively to earlier subscribers
+# If you would like to use this theme, keep in mind that we will not have time or resource to offer any maintenance or updates to Woocommerce and WP compatibility untill further notice
 
 Free and 100% open source framework:
 
-Tools powered by Visual Composer 
-
-- Template Builder
-- Widget Builder
-- Loop Builder for recent posts and comments layouts
-- Form Builder
-
-Lot's of other functionalities:
-
-Find more about Human 'friends' @ <a href="https://gogohuman.com/friends/">GoGoHuman.com</a>
-
-
-For installation go to:
-
-https://github.com/sergedirect/GoGoHuman
