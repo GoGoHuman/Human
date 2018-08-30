@@ -1,3 +1,2 @@
 The original project has been discontinued.
 Human 3.0 will not be listed on GitHub anymore, as our business evolved into something more than just a Wordpress theme...
-Find out more @ www.candohuman.com
